@@ -18,7 +18,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gpgroup/app_localization/app_localizations.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+import 'package:gpgroup/Service/Lang/LangChange.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:upgrader/upgrader.dart';
@@ -26,7 +26,10 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await FlutterDownloader.initialize();
-  runApp(MyApp());
+  runApp(Provider<LangChange>.value(
+      value: LangChange(),
+      child: MyApp()),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -38,6 +41,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   SharedPreferences preferences;
+  Locale _oldLocale;
   @override
   void initState() {
     // TODO: implement initState
@@ -47,84 +51,111 @@ class _MyAppState extends State<MyApp> {
   waitting()async{
     preferences = await SharedPreferences.getInstance();
     await preferences.setString('Version',"1.0.0");
+    preferences.getString('Language').isEmpty?await preferences.setString('Language', "en_US"): preferences.getString('Language');
+    print('pref =${ preferences.getString('Language')}');
+    if( preferences.getString('Language') == 'hi_IN'){
+      print('select hindi');
+      _oldLocale = Locale('hi', 'IN');
+    }
+    else if( preferences.getString('Language') == 'gu_IN'){
+      _oldLocale = Locale('gu', 'IN');
+
+      print('select gujarati');
+    }
+    else{
+      _oldLocale = Locale('en', 'US');
+
+      print('select english');
+    }
+    setState(() {
+
+    });
   }
   @override
   Widget build(BuildContext context) {
-
+    final lang = Provider.of<LangChange>(context);
+    lang.out.listen((event) {_oldLocale = event;});
+    lang.controller.add(_oldLocale);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return StreamBuilder<AppVersion>(
-      stream: ProjectRetrieve().APPVERSION,
-      builder: (context,snapshot){
-        if(snapshot.hasData){
-          return Provider<ProjectRetrieve>.value(
-            value: ProjectRetrieve(),
-            child: MaterialApp(
+    return StreamBuilder<Locale>(
+        stream:   lang.out,
+        builder: (context,local){
+          return StreamBuilder<AppVersion>(
+            stream: ProjectRetrieve().APPVERSION,
+            builder: (context,snapshot){
+              if(snapshot.hasData){
+                return Provider<ProjectRetrieve>.value(
+                  value: ProjectRetrieve(),
+                  child: MaterialApp(
 
-              color: Color(0xff0b4cbc),
+                    color: Color(0xff0b4cbc),
 
-              theme: ThemeData(
-                primaryColor:  Color(0xff0cb1b7),
-                buttonColor: Colors.black,
+                    theme: ThemeData(
+                      primaryColor:  Color(0xff0cb1b7),
+                      buttonColor: Colors.black,
 
 
-                //  primaryColor:  Colors.black.withOpacity(0.6),
-                bottomAppBarColor:Color(0xff0cb1b7),
+                      //  primaryColor:  Colors.black.withOpacity(0.6),
+                      bottomAppBarColor:Color(0xff0cb1b7),
 
-              ),
+                    ),
 
-              supportedLocales: [
-                Locale('en', 'US'),
-                Locale('gu', 'IN'),
-                Locale('hi', 'IN'),
-              ],
-              // These delegates make sure that the localization data for the proper language is loaded
-              localizationsDelegates: [
-                // THIS CLASS WILL BE ADDED LATER
-                // A class which loads the translations from JSON files
-                AppLocalizations.delegate,
-                // Built-in localization of basic text for Material widgets
-                GlobalMaterialLocalizations.delegate,
-                // Built-in localization for text direction LTR/RTL
-                GlobalWidgetsLocalizations.delegate,
-              ],
-              // Returns a locale which will be used by the app
-              localeResolutionCallback: (locale, supportedLocales) {
-                // Check if the current device locale is supported
-                for (var supportedLocale in supportedLocales) {
-                  if (supportedLocale.languageCode == locale.languageCode &&
-                      supportedLocale.countryCode == locale.countryCode) {
+                    supportedLocales: [
+                      Locale('en', 'US'),
+                      Locale('gu', 'IN'),
+                      Locale('hi', 'IN'),
+                    ],
+                    locale: local.data,
+                    // These delegates make sure that the localization data for the proper language is loaded
+                    localizationsDelegates: [
+                      // THIS CLASS WILL BE ADDED LATER
+                      // A class which loads the translations from JSON files
+                      AppLocalizations.delegate,
+                      // Built-in localization of basic text for Material widgets
+                      GlobalMaterialLocalizations.delegate,
+                      // Built-in localization for text direction LTR/RTL
+                      GlobalWidgetsLocalizations.delegate,
+                    ],
+                    // Returns a locale which will be used by the app
+                    // localeResolutionCallback: (locale, supportedLocales) {
+                    //   // Check if the current device locale is supported
+                    //   for (var supportedLocale in supportedLocales) {
+                    //     if (supportedLocale.languageCode == locale.languageCode &&
+                    //         supportedLocale.countryCode == locale.countryCode) {
+                    //
+                    //       return supportedLocale;
+                    //     }
+                    //   }
+                    //   // If the locale of the device is not supported, use the first one
+                    //   // from the list (English, in this case).
+                    //   return supportedLocales.first;
+                    // },
+                    home: redirectWidget(snapshot.data),
+                  ),
+                );
 
-                    return supportedLocale;
-                  }
-                }
-                // If the locale of the device is not supported, use the first one
-                // from the list (English, in this case).
-                return supportedLocales.first;
-              },
-              home: redirectWidget(snapshot.data),
-            ),
+              }
+              else if(snapshot.hasError){
+                return Container(child: Center(
+                  child: Text(
+                    snapshot.error.toString(),
+                    //CommonAssets.snapshoterror.toString(),
+                    style: TextStyle(
+                        color: CommonAssets.errorColor
+                    ),),
+                ));
+              }
+              else{
+                return CircularLoading();
+              }
+            },
+
           );
+        });
 
-        }
-        else if(snapshot.hasError){
-          return Container(child: Center(
-            child: Text(
-              snapshot.error.toString(),
-              //CommonAssets.snapshoterror.toString(),
-              style: TextStyle(
-                  color: CommonAssets.errorColor
-              ),),
-          ));
-        }
-        else{
-          return CircularLoading();
-        }
-      },
-
-    );
   }
   Widget redirectWidget(AppVersion appVersion){
     final appcastURL =

@@ -14,6 +14,7 @@ import 'package:gpgroup/Model/Users/BrokerData.dart';
 import 'package:gpgroup/Model/Users/CustomerModel.dart';
 import 'package:gpgroup/Pages/Customer/ExistingCustomerData.dart';
 import 'package:gpgroup/Pages/Customer/ZoomImage.dart';
+import 'package:gpgroup/Pages/Setting/Lang/Lang.dart';
 import 'package:gpgroup/Service/Auth/LoginAuto.dart';
 import 'package:gpgroup/Service/ProjectRetrieve.dart';
 import 'package:gpgroup/app_localization/app_localizations.dart';
@@ -39,6 +40,8 @@ class _HomeState extends State<Home> {
   int remainingCommission =0;
   String currentMonth;
   int pageIndex= 0;
+  List<Map<String ,dynamic>> dataList ;
+  bool cancelProperties = false;
   DateTime now = DateTime.now();
   @override
   void initState() {
@@ -96,15 +99,30 @@ class _HomeState extends State<Home> {
  _projectRetrieve.setCustomer(customerId);
 
     return Scaffold(
-      appBar: CommonappBar(IconButton(icon: Icon(Icons.exit_to_app), onPressed: ()async{
-        await LogInAndSignIn().signouts(customerId);
-      })),
+      appBar: CommonappBar(
+        Row(
+          children: [
+            IconButton(icon: Icon(Icons.exit_to_app), onPressed: ()async{
+              await LogInAndSignIn().signouts(customerId);
+            }),
+            IconButton(icon: Icon(Icons.language), onPressed: ()async{
+              Navigator.push(context, PageRouteBuilder(
+                //    pageBuilder: (_,__,____) => BuildingStructure(),
+                pageBuilder: (_,__,___)=> SelectLanguage(),
+                transitionDuration: Duration(milliseconds: 0),
+              ));
+            })
+          ],
+        )
+      ),
       body: loading ?CircularLoading(): StreamBuilder<CustomerAndAdvertise>(
           stream: _projectRetrieve.BROKERDATAANDADVERTISE(),
           builder:(context,snapshot){
             if(snapshot.hasData){
 
-
+              !cancelProperties?
+              dataList = snapshot.data.customerInfoModel.propertiesList:
+              dataList = snapshot.data.customerInfoModel.soldPropertiesList;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -127,7 +145,13 @@ class _HomeState extends State<Home> {
                       ),
                       itemCount: snapshot.data.advertiseList.length,
                       itemBuilder: (BuildContext context,index){
-                        return GestureDetector(
+                        return  snapshot.data.advertiseList.length <=0?
+                        Image.asset(
+                          'assets/defaultads.png'
+
+
+                        )
+                            : GestureDetector(
                           onTap: (){
                             Navigator.push(context, PageRouteBuilder(
                               //    pageBuilder: (_,__,____) => BuildingStructure(),
@@ -136,7 +160,8 @@ class _HomeState extends State<Home> {
                             ));
                           },
                           child: Card(
-                            child: Column(
+                            child:
+                            Column(
                               children: [
                                 Expanded(
                                   child: Image.network(
@@ -166,8 +191,9 @@ class _HomeState extends State<Home> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      IconButton(icon: Icon(Icons.home), onPressed: (){
+                      IconButton(icon: Icon(cancelProperties?Icons.history:Icons.new_releases), onPressed: (){
                         setState(() {
+                          cancelProperties = !cancelProperties;
                           pageIndex =1;
                         });
                       }),
@@ -206,13 +232,13 @@ Widget redirect(CustomerAndAdvertise snaspshot,ProjectRetrieve _projectRetrieve,
       return profile(snaspshot.customerInfoModel,size);
     }
     else {
-       return properties(snaspshot.customerInfoModel,_projectRetrieve);
+       return properties(dataList,_projectRetrieve);
     }
 }
 
-  Widget properties(CustomerInfoModel customerInfoModel,ProjectRetrieve _projectRetrieve) {
+  Widget properties(  List<Map<String ,dynamic>>  customerInfoModel,ProjectRetrieve _projectRetrieve) {
     return ListView.builder(
-        itemCount:customerInfoModel.propertiesList.length,
+        itemCount:customerInfoModel.length,
         itemBuilder: (context,index){
 
           return Card(
@@ -223,9 +249,9 @@ Widget redirect(CustomerAndAdvertise snaspshot,ProjectRetrieve _projectRetrieve,
             ),
             child: ListTile(
               onTap: ()async{
-                await _projectRetrieve.setProjectName(customerInfoModel.propertiesList[index]['ProjectName'], '');
-                await _projectRetrieve.setLoanRef(customerInfoModel.propertiesList[index]['LoanRef']);
-                await _projectRetrieve.setPartOfSociety(customerInfoModel.propertiesList[index]['Part'],customerInfoModel.propertiesList[index]['PropertyNumber']);
+                await _projectRetrieve.setProjectName(customerInfoModel[index]['ProjectName'], '');
+                await _projectRetrieve.setLoanRef(customerInfoModel[index]['LoanRef']);
+                await _projectRetrieve.setPartOfSociety(customerInfoModel[index]['Part'],customerInfoModel[index]['PropertyNumber']);
                 print(_projectRetrieve.projectName);
                 print(_projectRetrieve.loadId);
                 print(_projectRetrieve.partOfSociety);
@@ -236,8 +262,8 @@ Widget redirect(CustomerAndAdvertise snaspshot,ProjectRetrieve _projectRetrieve,
                   transitionDuration: Duration(milliseconds: 0),
                 ));
               },
-              title: Text(customerInfoModel.propertiesList[index]['ProjectName']),
-              subtitle: Text(customerInfoModel.propertiesList[index]['PropertyNumber']),
+              title: Text(customerInfoModel[index]['ProjectName']),
+              subtitle: Text(customerInfoModel[index]['PropertyNumber']),
             ),
           );
         }
