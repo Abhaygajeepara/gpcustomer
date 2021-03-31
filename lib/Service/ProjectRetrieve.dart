@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gpgroup/Model/Advertise/AdvertiseMode.dart';
 import 'package:gpgroup/Model/AppVersion/Version.dart';
@@ -38,7 +40,7 @@ class ProjectRetrieve{
     this.loadId = ref;
   }
 
-  final CollectionReference _collectionReference = FirebaseFirestore.instance.collection("Project");
+  final CollectionReference _projectReference = FirebaseFirestore.instance.collection("Project");
   final CollectionReference brokerReference = FirebaseFirestore.instance.collection('Broker');
   final CollectionReference infoReference = FirebaseFirestore.instance.collection('Info');
   final CollectionReference customerReference = FirebaseFirestore.instance.collection('Customer');
@@ -93,7 +95,7 @@ class ProjectRetrieve{
     return infoReference.doc('CustomerApp').snapshots().map(appVersion);
   }
  Stream<BookingDataModel> get CUSTOMERSINGLEPROPETIES{
-   return _collectionReference.doc(projectName).collection(partOfSociety).doc(propertiesNumber).snapshots().map(_bookingDataModel);
+   return _projectReference.doc(projectName).collection(partOfSociety).doc(propertiesNumber).snapshots().map(_bookingDataModel);
  }
  BookingDataModel _bookingDataModel(DocumentSnapshot snapshot){
    return  BookingDataModel.of(snapshot);
@@ -103,4 +105,26 @@ class ProjectRetrieve{
      return BookingAndLoan(bookingData: bookingDataModel, loanData : loanData);
    } );
  }
+
+ StreamController<CustomerOwnAndSellPropertiesProjects> controller = BehaviorSubject<CustomerOwnAndSellPropertiesProjects>();
+  Stream<CustomerOwnAndSellPropertiesProjects>  get PROJECTLIST =>controller.stream;
+
+  addDataIntoStreamController(List<String> nameOfOwnProject,List<String> nameOfSoldProject)async{
+    List<ProjectNameList> ownProperties =[];
+    List<ProjectNameList> soldProperties =[];
+    
+    for(int  i=0;i<nameOfOwnProject.length;i++){
+      final docProject = await _projectReference.doc(nameOfOwnProject[i]).get();
+      ProjectNameList projectData = ProjectNameList.of(docProject);
+      ownProperties.add(projectData);
+    }
+    
+    for(int j=0;j<nameOfSoldProject.length;j++){
+      final docProject = await _projectReference.doc(nameOfSoldProject[j]).get();
+      ProjectNameList projectData = ProjectNameList.of(docProject);
+      soldProperties.add(projectData);
+    }
+    CustomerOwnAndSellPropertiesProjects customerOwnAndSellPropertiesProjects  = CustomerOwnAndSellPropertiesProjects.of(ownProperties,soldProperties) ;
+    controller.sink.add(customerOwnAndSellPropertiesProjects);
+  }
 }

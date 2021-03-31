@@ -45,12 +45,12 @@ class _LoanInfoState extends State<LoanInfo> {
      paidAmount = 0;
      remainingAmount = 0;
       for(int i=0;i<loanData.length;i++){
-        totalAmount = totalAmount+bookingDataModel.perMonthEMI;
+        totalAmount = totalAmount+1;
         if(loanData[i].emiPending){
-          remainingAmount = remainingAmount+bookingDataModel.perMonthEMI;
+          remainingAmount = remainingAmount+1;
         }
         else{
-          paidAmount =paidAmount +bookingDataModel.perMonthEMI;
+          paidAmount =paidAmount +1;
         }
       }
 
@@ -509,7 +509,7 @@ class _LoanInfoState extends State<LoanInfo> {
                                 ),
                               ),
                               Text(
-                                AppLocalizations.of(context).translate('Income'),
+                                AppLocalizations.of(context).translate('EMI'),
                                 style: TextStyle(
                                     color: CommonAssets.AppbarTextColor,
                                     fontWeight: FontWeight.bold,
@@ -537,7 +537,7 @@ class _LoanInfoState extends State<LoanInfo> {
 
                             children: [
                               Text(
-                                AppLocalizations.of(context).translate('Received'),
+                                AppLocalizations.of(context).translate('Paid'),
                                 style: TextStyle(
                                     color: CommonAssets.AppbarTextColor,
                                     fontWeight: FontWeight.bold,
@@ -545,7 +545,7 @@ class _LoanInfoState extends State<LoanInfo> {
                                 ),
                               ),
                               Text(
-                                AppLocalizations.of(context).translate('Income'),
+                                AppLocalizations.of(context).translate('EMI'),
                                 style: TextStyle(
                                     color: CommonAssets.AppbarTextColor,
                                     fontWeight: FontWeight.bold,
@@ -580,7 +580,7 @@ class _LoanInfoState extends State<LoanInfo> {
                                 ),
                               ),
                               Text(
-                                AppLocalizations.of(context).translate('Income'),
+                                AppLocalizations.of(context).translate('EMI'),
                                 style: TextStyle(
                                     color: CommonAssets.AppbarTextColor,
                                     fontWeight: FontWeight.bold,

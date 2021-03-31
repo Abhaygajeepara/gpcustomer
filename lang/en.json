@@ -166,5 +166,7 @@
   "IDIsExist": "ID Is Exist",
   "MostVisitedSite": "Most Visited Site",
   "Thisuserhasnopermissiontologin": "This user has no permission to log in",
-  "Download": "Download"
+  "Download": "Download",
+  "EMI":"EMI",
+  "Paid": "Paid"
 }

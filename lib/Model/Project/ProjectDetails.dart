@@ -57,6 +57,17 @@ int siteVisit;
   }
 }
 
+class CustomerOwnAndSellPropertiesProjects{
+  List<ProjectNameList> ownProperties ;
+  List<ProjectNameList> soldProperties ;
+  CustomerOwnAndSellPropertiesProjects({this.ownProperties,this.soldProperties  });
+
+  factory CustomerOwnAndSellPropertiesProjects.of(List<ProjectNameList> ownProperties,List<ProjectNameList> soldProperties){
+    return CustomerOwnAndSellPropertiesProjects(ownProperties: ownProperties,soldProperties: soldProperties );
+  }
+
+}
+
 class CustomerAndAdvertise{
   CustomerInfoModel customerInfoModel;
     List<AdvertiseModel> advertiseList;
