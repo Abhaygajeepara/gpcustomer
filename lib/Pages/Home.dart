@@ -64,10 +64,10 @@ class _HomeState extends State<Home> {
         final notification = message['data'];
 
       },
-      onBackgroundMessage: (Map<String, dynamic> message) async {
-        await Firebase.initializeApp();
-        await FirebaseFirestore.instance.collection("jaydip").doc("d").set({"jaydip":"dip"});
-      },
+      // onBackgroundMessage: (Map<String, dynamic> message) async {
+      //   await Firebase.initializeApp();
+      //   await FirebaseFirestore.instance.collection("jaydip").doc("d").set({"jaydip":"dip"});
+      // },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
       },
@@ -326,15 +326,21 @@ Widget propertiesShow(List<ProjectNameList> projectName,bool isOwn,Size size){
         scrollDirection: Axis.horizontal,
           itemCount: projectName.length,itemBuilder: (context,index){
         return Container(
-          // width: size.width *0.15,
-          // height: size.height *0.10,
-          child: Card(
-            child: ListTile(
-              leading: Image.network(
-                  projectName[index].imagesUrl.first
-              ),
-            )
-          ),
+          width: size.width *0.15,
+            height: size.height *0.15,
+         decoration: BoxDecoration(
+           borderRadius: BorderRadius.circular(150.0)
+              // color: Colors
+         ),
+         // height: size.height *0.10,
+          child: Image.network(projectName[index].imagesUrl.first)
+
+          // CircleAvatar(
+          //   //radius: 10.0,
+          // //  backgroundImage: NetworkImage(projectName[index].imagesUrl.first),
+          //   backgroundColor: Colors.transparent,
+          //   child: Image.network(projectName[index].imagesUrl.first),
+          // )
         );
       }),
     );

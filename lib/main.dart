@@ -51,7 +51,7 @@ class _MyAppState extends State<MyApp> {
   waitting()async{
     preferences = await SharedPreferences.getInstance();
     await preferences.setString('Version',"1.0.0");
-    preferences.getString('Language').isEmpty?await preferences.setString('Language', "en_US"): preferences.getString('Language');
+    !preferences.containsKey('Language')?await preferences.setString('Language', "en_US"): preferences.getString('Language');
     print('pref =${ preferences.getString('Language')}');
     if( preferences.getString('Language') == 'hi_IN'){
       print('select hindi');
