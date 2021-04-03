@@ -110,21 +110,56 @@ class ProjectRetrieve{
   Stream<CustomerOwnAndSellPropertiesProjects>  get PROJECTLIST =>controller.stream;
 
   addDataIntoStreamController(List<String> nameOfOwnProject,List<String> nameOfSoldProject)async{
+    CustomerOwnAndSellPropertiesProjects customerOwnAndSellPropertiesProjects;
     List<ProjectNameList> ownProperties =[];
     List<ProjectNameList> soldProperties =[];
     
     for(int  i=0;i<nameOfOwnProject.length;i++){
-      final docProject = await _projectReference.doc(nameOfOwnProject[i]).get();
-      ProjectNameList projectData = ProjectNameList.of(docProject);
+
+    final ownData = await   _projectReference.doc(nameOfOwnProject[i]).get();
+       ProjectNameList   projectData = ProjectNameList.of(ownData);
+
       ownProperties.add(projectData);
     }
     
     for(int j=0;j<nameOfSoldProject.length;j++){
-      final docProject = await _projectReference.doc(nameOfSoldProject[j]).get();
-      ProjectNameList projectData = ProjectNameList.of(docProject);
+    final sodData = await     _projectReference.doc(nameOfSoldProject[j]).get();
+       ProjectNameList  projectData = ProjectNameList.of(sodData);
       soldProperties.add(projectData);
+
+
+
+     // final docProject = await _projectReference.doc(nameOfSoldProject[j]).get()
+
     }
-    CustomerOwnAndSellPropertiesProjects customerOwnAndSellPropertiesProjects  = CustomerOwnAndSellPropertiesProjects.of(ownProperties,soldProperties) ;
+
+     for(int  i=0;i<nameOfOwnProject.length;i++){
+
+       _projectReference.doc(nameOfOwnProject[i]).snapshots().listen((event) {
+         ProjectNameList projectData = ProjectNameList.of(event);
+         ownProperties.removeAt(i);
+         ownProperties.insert(i,projectData);
+
+      });
+
+    }
+
+    for(int j=0;j<nameOfSoldProject.length;j++){
+
+       _projectReference.doc(nameOfSoldProject[j]).snapshots().listen((event) {
+         ProjectNameList projectData = ProjectNameList.of(event);
+        soldProperties.removeAt(j);
+        soldProperties.insert(j, projectData);
+      });
+     // final docProject = await _projectReference.doc(nameOfSoldProject[j]).get()
+
+    }
+
+
+     customerOwnAndSellPropertiesProjects  = CustomerOwnAndSellPropertiesProjects.of(ownProperties,soldProperties) ;
     controller.sink.add(customerOwnAndSellPropertiesProjects);
   }
+
+  StreamController<String> splashController = BehaviorSubject<String>();
+  Stream<String> get SPLASHSTREAM =>splashController.stream;
 }

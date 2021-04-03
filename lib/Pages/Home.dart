@@ -1,10 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:gpgroup/Commonassets/CommonLoading.dart';
 import 'package:gpgroup/Commonassets/Commonassets.dart';
+import 'package:gpgroup/Commonassets/Widgets/AppDrawer.dart';
 
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
 import 'package:gpgroup/Model/Income/Income.dart';
@@ -16,6 +18,7 @@ import 'package:gpgroup/Model/Users/BrokerData.dart';
 import 'package:gpgroup/Model/Users/CustomerModel.dart';
 import 'package:gpgroup/Pages/Customer/ExistingCustomerData.dart';
 import 'package:gpgroup/Pages/Customer/ZoomImage.dart';
+import 'package:gpgroup/Pages/Project/ProjectInfo.dart';
 import 'package:gpgroup/Pages/Setting/Lang/Lang.dart';
 import 'package:gpgroup/Service/Auth/LoginAuto.dart';
 import 'package:gpgroup/Service/ProjectRetrieve.dart';
@@ -36,15 +39,24 @@ class _HomeState extends State<Home> {
   String customerId;
   String token ;
   bool loading = true;
-  List<IncomeModel> _data;
+
   int receivedCommission = 0;
   int totalCommission = 0;
   int remainingCommission =0;
   String currentMonth;
-  int pageIndex= 0;
+
   List<Map<String ,dynamic>> dataList ;
   bool cancelProperties = false;
   DateTime now = DateTime.now();
+
+  List<List<Map<String ,dynamic>>> ownProperties =[];
+  List<List<Map<String ,dynamic>>> soldProperties =[];
+  List<String> availableOwnProject = [];
+  List<String> availableSoldProject = [];
+  CustomerInfoModel profileData;
+
+
+
   @override
   void initState() {
     // TODO: implement initState
@@ -82,17 +94,19 @@ class _HomeState extends State<Home> {
 
         customerId = prefs.getString('CustomerId');
 
-    });
-   // await Future.delayed(Duration(seconds: 1));
+    });if(customerId  != ''){
     setState(() {
       loading = false;
     });
   }
+   // await Future.delayed(Duration(seconds: 1));
+
+  }
   categorize(CustomerInfoModel model,ProjectRetrieve projectRetrieve)async{
-    List<List<Map<String ,dynamic>>> ownProperties =[];
-    List<List<Map<String ,dynamic>>> soldProperties =[];
-    List<String> availableOwnProject = [];
-    List<String> availableSoldProject = [];
+     ownProperties =[];
+     soldProperties =[];
+   availableOwnProject = [];
+    availableSoldProject = [];
       for(int i=0;i<model.propertiesList.length;i++){
         if(!availableOwnProject.contains(model.propertiesList[i]['ProjectName'])){
         availableOwnProject.add(model.propertiesList[i]['ProjectName']);
@@ -147,28 +161,68 @@ class _HomeState extends State<Home> {
   final fontWeight = FontWeight.bold;
  _projectRetrieve.setCustomer(customerId);
 
+    ////  AppLocalizations.of(context).translate('Profile'),
+  //    // AppLocalizations.of(context).translate('Language'),
+  //    // AppLocalizations.of(context).translate('LogOut'),
     return Scaffold(
       appBar: CommonappBar(
-        Row(
+         IconButton(icon: Icon(Icons.person), onPressed: (){
+       return    AwesomeDialog(
+         context: context,
+
+         dialogType: DialogType.INFO,
+         animType: AnimType.BOTTOMSLIDE,
+         title: 'Dialog Title',
+        body:loading?CircularLoading():   Column(
+
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            IconButton(icon: Icon(Icons.exit_to_app), onPressed: ()async{
-              await LogInAndSignIn().signouts(customerId);
-            }),
-            IconButton(icon: Icon(Icons.language), onPressed: ()async{
-              Navigator.push(context, PageRouteBuilder(
-                //    pageBuilder: (_,__,____) => BuildingStructure(),
-                pageBuilder: (_,__,___)=> SelectLanguage(),
-                transitionDuration: Duration(milliseconds: 0),
-              ));
-            })
+            Text(
+              AppLocalizations.of(context).translate('CustomerName'),
+
+              style: TextStyle(
+                  fontWeight: fontWeight,
+                  fontSize: titleFontSize
+              ),
+            ),
+            SizedBox(height: spaceVertical,),
+            Text(
+              profileData.customerName,
+              style: TextStyle(
+                  fontSize: fontSize
+              ),
+            ),
+            SizedBox(height: spaceVertical,),
+            Text(
+              AppLocalizations.of(context).translate('MobileNumber'),
+              style: TextStyle(
+                  fontWeight: fontWeight,
+                  fontSize: titleFontSize
+              ),
+            ),
+            SizedBox(height: spaceVertical,),
+            Text(
+              profileData.number.toString(),
+              style: TextStyle(
+                  fontSize: fontSize
+              ),
+            ),
+            SizedBox(height: spaceVertical,),
           ],
-        )
+        ),
+         // btnCancelOnPress: () {},
+         // btnOkOnPress: () {},
+       )..show();
+         })
       ),
       body: loading ?CircularLoading(): SingleChildScrollView(
         child: StreamBuilder<CustomerAndAdvertise>(
             stream: _projectRetrieve.BROKERDATAANDADVERTISE(),
             builder:(context,snapshot){
               if(snapshot.hasData){
+                //profileData use to display customer data
+                profileData = snapshot.data.customerInfoModel;
+
                 categorize(snapshot.data.customerInfoModel,_projectRetrieve);
                 !cancelProperties?
                 dataList = snapshot.data.customerInfoModel.propertiesList:
@@ -249,27 +303,11 @@ class _HomeState extends State<Home> {
                               }
                           ),
                           SizedBox(height: size.height * 0.01,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              IconButton(icon: Icon(
-                                  cancelProperties ? Icons.history : Icons
-                                      .new_releases), onPressed: () {
-                                setState(() {
-                                  cancelProperties = !cancelProperties;
-                                  pageIndex = 1;
-                                });
-                              }),
-                              IconButton(
-                                  icon: Icon(Icons.person), onPressed: () {
-                                setState(() {
-                                  pageIndex = 2;
-                                });
-                              })
-                            ],
-                          ),
+
                           SizedBox(height: size.height * 0.01,),
                           propertiesShow(projectNameSnapshot.data.ownProperties,true,size),
+                          SizedBox(height: size.height * 0.01,),
+                          propertiesShow(projectNameSnapshot.data.soldProperties,false,size),
                           //  Expanded(child: redirect(snapshot.data,_projectRetrieve,size))
 
                         ],
@@ -287,12 +325,16 @@ class _HomeState extends State<Home> {
                       ));
                     }
                     else {
-                      return Center(child: CircularLoading());
+                      return Container(
+                          height: size.height,
+                          child: Center(child: CircularLoading()));
                     }
                   });
               }
               else if(snapshot.hasError){
-                return Container(child: Center(
+                return Container(
+
+                    child: Center(
                   child: Text(
                     snapshot.error.toString(),
                     //CommonAssets.snapshoterror.toString(),
@@ -302,53 +344,107 @@ class _HomeState extends State<Home> {
                 ));
               }
               else{
-                return CircularLoading();
+                return Container(
+                    height: size.height,
+                    child: Center(child: CircularLoading()));
               }
             } ),
       ),
-
+  drawer: AppDrawer(),
     );
   }
-Widget redirect(CustomerAndAdvertise snaspshot,ProjectRetrieve _projectRetrieve,Size size){
-    if(pageIndex == 2){
-      return profile(snaspshot.customerInfoModel,size);
-    }
-    else {
-       return properties(dataList,_projectRetrieve);
-    }
-}
+// Widget redirect(CustomerAndAdvertise snaspshot,ProjectRetrieve _projectRetrieve,Size size){
+//     if(pageIndex == 2){
+//       return profile(snaspshot.customerInfoModel,size);
+//     }
+//     else {
+//        return properties(dataList,_projectRetrieve);
+//     }
+// }
 
-Widget propertiesShow(List<ProjectNameList> projectName,bool isOwn,Size size){
-    String title = isOwn? "Own addinto Locals":"sold add into loca";
-    return Container(
-      height: size.height *0.15,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-          itemCount: projectName.length,itemBuilder: (context,index){
-        return Container(
-          width: size.width *0.15,
+Widget propertiesShow(List<ProjectNameList> projectDataList,bool isOwn,Size size,){
+    final titleSize = size.height*0.02;
+    String title = isOwn? AppLocalizations.of(context).translate('OwnProperty')
+        :AppLocalizations.of(context).translate('CancelProperty');
+    List<Map<String ,dynamic>> dataProperties ;
+    bool isOwnPropertiesPage;
+    final fontSize = size.height*0.02;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+            title,
+          style: TextStyle(
+            fontSize: titleSize,
+            fontWeight: FontWeight.bold
+          ),
+        ),
+        Card(
+
+          child: Container(
             height: size.height *0.15,
-         decoration: BoxDecoration(
-           borderRadius: BorderRadius.circular(150.0)
-              // color: Colors
-         ),
-         // height: size.height *0.10,
-          child: Image.network(projectName[index].imagesUrl.first)
+            //color: CommonAssets.cardBackGround,
+            decoration: BoxDecoration(
+                color: CommonAssets.cardBackGround,
+                border: Border.all(
+                    color: Theme.of(context).primaryColor
+                )
+            ),
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: projectDataList.length,itemBuilder: (context,index){
+           //   print(projectDataList[index].projectName);
+              return Padding(
+                padding:  EdgeInsets.symmetric(horizontal: size.width *0.02),
+                child: GestureDetector(
+                  onTap: ()async{
+                    int projectFindIndex = isOwn?
+                    availableOwnProject.indexWhere((element) =>element ==projectDataList[index].projectName)
+                        : availableSoldProject.indexWhere((element) =>element ==projectDataList[index].projectName);
 
-          // CircleAvatar(
-          //   //radius: 10.0,
-          // //  backgroundImage: NetworkImage(projectName[index].imagesUrl.first),
-          //   backgroundColor: Colors.transparent,
-          //   child: Image.network(projectName[index].imagesUrl.first),
-          // )
-        );
-      }),
+                    dataProperties  = isOwn?ownProperties[projectFindIndex]:soldProperties[projectFindIndex];
+                    isOwnPropertiesPage = isOwn?true:false;
+                    // print(projectDataList[index].projectName);
+                    // print(projectFindIndex);
+                    return Navigator.push(context, PageRouteBuilder(pageBuilder:(_,__,___)=>
+                        ProjectData(projectNameList: projectDataList[projectFindIndex], isOwnPropertiesPage: isOwnPropertiesPage, ownProperties: dataProperties)));
+                  },
+                  child: Column(
+                  //  mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        child: CircleAvatar(
+
+                          onBackgroundImageError: (exception, stackTrace) => Text('No Image'),
+                          radius: 50,
+                          backgroundImage: NetworkImage(projectDataList[index].imagesUrl.first),
+                          backgroundColor: Colors.transparent,
+                          //child: Image.network(projectName[index].imagesUrl.first),
+                        ),
+                      ),
+                       AutoSizeText(
+                            projectDataList[index].projectName,
+                         style: TextStyle(
+                            fontSize: fontSize
+                         ),
+
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
+        )
+      ],
     );
 }
 
-  Widget properties(  List<Map<String ,dynamic>>  customerInfoModel,ProjectRetrieve _projectRetrieve) {
+  Widget properties(  List<Map<String ,dynamic>>  customerProperties,ProjectRetrieve _projectRetrieve) {
     return ListView.builder(
-        itemCount:customerInfoModel.length,
+        itemCount:customerProperties.length,
         itemBuilder: (context,index){
 
           return Card(
@@ -359,9 +455,9 @@ Widget propertiesShow(List<ProjectNameList> projectName,bool isOwn,Size size){
             ),
             child: ListTile(
               onTap: ()async{
-                await _projectRetrieve.setProjectName(customerInfoModel[index]['ProjectName'], '');
-                await _projectRetrieve.setLoanRef(customerInfoModel[index]['LoanRef']);
-                await _projectRetrieve.setPartOfSociety(customerInfoModel[index]['Part'],customerInfoModel[index]['PropertyNumber']);
+                await _projectRetrieve.setProjectName(customerProperties[index]['ProjectName'], '');
+                await _projectRetrieve.setLoanRef(customerProperties[index]['LoanRef']);
+                await _projectRetrieve.setPartOfSociety(customerProperties[index]['Part'],customerProperties[index]['PropertyNumber']);
                 print(_projectRetrieve.projectName);
                 print(_projectRetrieve.loadId);
                 print(_projectRetrieve.partOfSociety);
@@ -372,56 +468,19 @@ Widget propertiesShow(List<ProjectNameList> projectName,bool isOwn,Size size){
                   transitionDuration: Duration(milliseconds: 0),
                 ));
               },
-              title: Text(customerInfoModel[index]['ProjectName']),
-              subtitle: Text(customerInfoModel[index]['PropertyNumber']),
+              title: Text(customerProperties[index]['ProjectName']),
+              subtitle: Text(customerProperties[index]['PropertyNumber']),
             ),
           );
         }
     );
   }
 
-  Widget profile(CustomerInfoModel customerInfoModel,Size size) {
-
-    final fontSize= size.height *0.02;
-    final titleFontSize= size.height *0.02;
-    final spaceVertical = size.height *0.01;
-    final fontWeight = FontWeight.bold;
-    return Column(
 
 
-      children: [
-        Text(
-          AppLocalizations.of(context).translate('CustomerName'),
-
-          style: TextStyle(
-              fontWeight: fontWeight,
-              fontSize: titleFontSize
-          ),
-        ),
-        SizedBox(height: spaceVertical,),
-        Text(
-          customerInfoModel.customerName,
-          style: TextStyle(
-              fontSize: fontSize
-          ),
-        ),
-        SizedBox(height: spaceVertical,),
-        Text(
-          AppLocalizations.of(context).translate('MobileNumber'),
-          style: TextStyle(
-              fontWeight: fontWeight,
-              fontSize: titleFontSize
-          ),
-        ),
-        SizedBox(height: spaceVertical,),
-        Text(
-          customerInfoModel.number.toString(),
-          style: TextStyle(
-              fontSize: fontSize
-          ),
-        ),
-        SizedBox(height: spaceVertical,),
-      ],
-    );
-  }
+  // Widget profile(CustomerInfoModel customerInfoModel,Size size) {
+  //
+  //
+  //   return
+  // }
 }

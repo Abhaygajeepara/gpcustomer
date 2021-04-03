@@ -3,9 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
-import 'file:///E:/Work/Flutter/Order/gpgroup/lib/Model/Users/UsersData.dart';
+
+
 import 'package:gpgroup/Model/User.dart';
 import 'package:gpgroup/Service/ProjectRetrieve.dart';
 import 'package:gpgroup/Service/ProjectRetrieve.dart';
@@ -21,6 +21,7 @@ final customerRef = FirebaseFirestore.instance.collection('Customer');
     try{
 
       final customerExist = await customerRef.doc(id).get();
+      preferences.setString('CustomerId',id);
       if(customerExist.exists){
 
 
@@ -30,7 +31,7 @@ final customerRef = FirebaseFirestore.instance.collection('Customer');
           await customerRef.doc(id).update({
             "NotificationKey":FieldValue.arrayUnion([notificationToken]),
           });
-          preferences.setString('CustomerId',id);
+         // preferences.setString('CustomerId',id);
           return  UserData.of(customerExist);
 
 
@@ -66,14 +67,14 @@ Future signouts(String customerID)async{
     }
 }
 
-UsersData _userData (DocumentSnapshot snapshot){
-    try{
-     UserData.of(snapshot);
-    }
-    catch(e){
-      print(e.toString());
-    }
-}
+// UsersData _userData (DocumentSnapshot snapshot){
+//     try{
+//      UserData.of(snapshot);
+//     }
+//     catch(e){
+//       print(e.toString());
+//     }
+// }
 // Stream<UsersData> get USERDATA{
 //     return _auth.authStateChanges().map(_userData);
 // }

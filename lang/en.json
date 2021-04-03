@@ -168,5 +168,7 @@
   "Thisuserhasnopermissiontologin": "This user has no permission to log in",
   "Download": "Download",
   "EMI":"EMI",
-  "Paid": "Paid"
+  "Paid": "Paid",
+  "CancelProperty": "Sold Out Property",
+  "OwnProperty": "Own Property"
 }

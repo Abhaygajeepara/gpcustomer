@@ -9,7 +9,7 @@ class CommonAssets{
   static String apptitle = 'GP Group ';
   // only for loading page
   static Color buttonColor =Color(0xff0cb1b7);
-
+  static Color cardBackGround = Colors.white70;
   static Color standardtextcolor = Colors.black;
   static double titletextsize  = 25.0;
 
@@ -30,7 +30,7 @@ class CommonAssets{
   //server error
   static String snapshoterror = 'Server Error';
   static Color soldProduct =Colors.white;
-  static Color paidEmiCardColor = Colors.grey;
+   static Color paidEmiCardColor = Colors.grey;
   static Color editIconColor = Colors.black;
 
 

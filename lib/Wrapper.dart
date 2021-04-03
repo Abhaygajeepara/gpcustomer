@@ -1,12 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gpgroup/Commonassets/CommonLoading.dart';
 import 'package:gpgroup/Model/User.dart';
 import 'package:gpgroup/Pages/Auth/LogIn.dart';
 import 'package:gpgroup/Pages/Home.dart';
+import 'package:gpgroup/Pages/splashScreen.dart';
 import 'package:gpgroup/Service/ProjectRetrieve.dart';
 import 'package:gpgroup/Service/ProjectRetrieve.dart';
 
 import 'package:provider/provider.dart';
+import 'package:splashscreen/splashscreen.dart';
 
 
 
@@ -43,14 +46,16 @@ class _WrapperState extends State<Wrapper> {
     return StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context,AsyncSnapshot<User> snapshot) {
-        if(snapshot.connectionState == ConnectionState.waiting)
-          return CircularProgressIndicator();
+        if(snapshot.connectionState == ConnectionState.waiting){
+          return  CircularLoading();
+        }
+
         if(!snapshot.hasData || snapshot.data == null)
         {
           return Login();
         }
         else{
-          return Home();
+          return new Home();
         }
       },
     );

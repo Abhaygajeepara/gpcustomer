@@ -62,6 +62,13 @@ class CustomerOwnAndSellPropertiesProjects{
   List<ProjectNameList> soldProperties ;
   CustomerOwnAndSellPropertiesProjects({this.ownProperties,this.soldProperties  });
 
+  setOwn( List<ProjectNameList> ownProperty){
+    this.ownProperties =ownProperty;
+  }
+  setSold( List<ProjectNameList> soldProperty){
+    this.soldProperties =soldProperty;
+  }
+
   factory CustomerOwnAndSellPropertiesProjects.of(List<ProjectNameList> ownProperties,List<ProjectNameList> soldProperties){
     return CustomerOwnAndSellPropertiesProjects(ownProperties: ownProperties,soldProperties: soldProperties );
   }
