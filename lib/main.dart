@@ -168,14 +168,22 @@ class _MyAppState extends State<MyApp> {
             }
             else{
               return Scaffold(
-                body: Center(child: AutoSizeText(
+                body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Image.asset('assets/NoInterNet.png'),
+            AutoSizeText(
 
-                  "No Internet Connection",
-                  maxLines: 4,
-                  style: TextStyle(
-                      fontSize: 30
-                  ),
-                )),
+            "No Internet Connection Found",
+              maxLines: 4,
+              style: TextStyle(
+                  fontSize: 25,
+                
+              ),
+            )
+              ],
+            );
               );
             }
 

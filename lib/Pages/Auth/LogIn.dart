@@ -29,6 +29,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return  Scaffold(
+     resizeToAvoidBottomInset: false,
      body: loading ?CircularLoading(): Center(
        child: Container(
          child:  Form(
