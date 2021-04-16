@@ -19,7 +19,9 @@ class _PaidEmiDetailsState extends State<PaidEmiDetails> {
     final minverticalSpace = size.height *0.01;
     final verticalSpace = size.height *0.02;
     return Scaffold(
-      appBar: CommonappBar(Container()),
+      appBar: CommonappBar(
+          widget.singlePropertiesLoanInfo.loadId,
+          Container()),
       body: SingleChildScrollView(
         child: Padding(
           padding:  EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.width*0.02),

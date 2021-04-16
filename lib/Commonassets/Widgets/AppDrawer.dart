@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:gpgroup/Commonassets/Commonassets.dart';
 
 import 'package:gpgroup/Pages/Setting/Lang/Lang.dart';
 import 'package:gpgroup/Service/Auth/LoginAuto.dart';
@@ -19,33 +20,22 @@ class _AppDrawerState extends State<AppDrawer> {
   Widget build(BuildContext context) {
     final _projectRetrieve = Provider.of<ProjectRetrieve>(context);
     final size = MediaQuery.of(context).size;
+
+    final fontSize= size.height *0.02;
+    final titleFontSize= size.height *0.02;
+    final spaceVertical = size.height *0.01;
+    final fontWeight = FontWeight.bold;
     final spaceHor =size.width*0.01;
+    Color iconColor = CommonAssets.appBarDrawerColor;
     return Drawer(
+
       child: ListView(
+
         children: [
-          // ListTile(
-          //   onTap: ()async{
-          //     Navigator.pop(context);
-          //     return   await Navigator.push(
-          //       context,
-          //       PageRouteBuilder(
-          //         pageBuilder: (_, __, ___) => Profile(),
-          //         transitionDuration: Duration(seconds: 0),
-          //       ),
-          //     );
-          //
-          //     // return Navigator.push(context,MaterialPageRoute(builder: (context)=>Home() ));
-          //
-          //   },
-          //   title: Row(
-          //
-          //     children: [
-          //       Icon(Icons.person),
-          //       SizedBox(width: spaceHor,),
-          //       Text(AppLocalizations.of(context).translate('Profile'))
-          //     ],
-          //   ),
-          // ),
+
+          DrawerHeader(
+              child:Image.asset('assets/vrajraj.png') ),
+
           ListTile(
             onTap: ()async{
               Navigator.pop(context);
@@ -63,7 +53,7 @@ class _AppDrawerState extends State<AppDrawer> {
             title: Row(
 
               children: [
-                Icon(Icons.language),
+                Icon(Icons.language,color: iconColor,),
                 SizedBox(width: spaceHor,),
                 Text(AppLocalizations.of(context).translate('Language'))
               ],
@@ -80,7 +70,7 @@ class _AppDrawerState extends State<AppDrawer> {
             title: Row(
 
               children: [
-                Icon(Icons.exit_to_app),
+                Icon(Icons.exit_to_app,color: iconColor,),
                 SizedBox(width: spaceHor,),
                 Text(AppLocalizations.of(context).translate('LogOut'))
               ],

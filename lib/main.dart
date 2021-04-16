@@ -89,6 +89,7 @@ class _MyAppState extends State<MyApp> {
       DeviceOrientation.portraitDown,
     ]);
     return MaterialApp(
+
       home: Scaffold(
         body: StreamBuilder<ConnectivityStatus>(
           stream: connectionProvider.CONNECTIONSTREAM,
@@ -112,7 +113,7 @@ class _MyAppState extends State<MyApp> {
                                 color: Color(0xff0b4cbc),
 
                                 theme: ThemeData(
-                                  primaryColor:  Color(0xff0cb1b7),
+                                  primaryColor:  Colors.white,
                                   buttonColor: Colors.black,
 
 

@@ -14,6 +14,7 @@ class SinglePropertiesLoanInfo{
   String relation;
   int amount;
   Timestamp paymentTime;
+  String loadId;
 
 
   SinglePropertiesLoanInfo({
@@ -28,7 +29,8 @@ class SinglePropertiesLoanInfo{
     @required this.receiverName,
   @required this.relation,
     @required this.amount,
-    @required this.paymentTime
+    @required this.paymentTime,
+    @required this.loadId
 
   });
   factory SinglePropertiesLoanInfo.of(DocumentSnapshot snapshot){
@@ -45,7 +47,8 @@ class SinglePropertiesLoanInfo{
       receiverName: snapshot['ReceiverName'],
       relation: snapshot['Relation'],
       amount: snapshot['Amount'],
-      paymentTime: snapshot['PaymentDate']
+      paymentTime: snapshot['PaymentDate'],
+      loadId: snapshot['LoanId']
 
 
     );

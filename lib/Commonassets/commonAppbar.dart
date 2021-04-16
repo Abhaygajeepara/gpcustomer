@@ -9,10 +9,10 @@ import 'package:gpgroup/Commonassets/Commonassets.dart';
 //
 //   );
 // }
-Widget CommonappBar(Widget appwidget){
+Widget CommonappBar(String  titleString,Widget appwidget,){
   return AppBar(
-    title : Text(CommonAssets.apptitle,style: TextStyle(color: Colors.white),),
-  iconTheme:IconThemeData(color: Colors.white) ,
+    title : Text(titleString.toString(),style: TextStyle(color: CommonAssets.AppbarTextColor),),
+  iconTheme:IconThemeData(color: CommonAssets.appBarDrawerColor) ,
     actions: [
       appwidget
     ],

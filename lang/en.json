@@ -170,5 +170,9 @@
   "EMI":"EMI",
   "Paid": "Paid",
   "CancelProperty": "Sold Out Property",
-  "OwnProperty": "Own Property"
+  "OwnProperty": "Own Property",
+  "RemainingEMI":"Remaining EMI",
+  "EnterMobileNumberRegisteredByAdmin": "Enter Mobile Number Registered By Admin",
+  "Vrajraj": "Vrajraj",
+  "Corporation": "Corporation"
 }

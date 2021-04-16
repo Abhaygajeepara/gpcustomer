@@ -28,7 +28,7 @@ dependencies:
   firebase_auth: ^0.18.3
   cloud_firestore: ^0.14.3
   provider: ^4.3.2+2
-
+  fluttertoast: ^7.1.6
   speech_to_text: ^3.0.1
   avatar_glow: ^1.2.0
   font_awesome_flutter: ^8.10.0

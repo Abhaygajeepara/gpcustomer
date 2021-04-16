@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gpgroup/Commonassets/CommonLoading.dart';
 import 'package:gpgroup/Commonassets/Commonassets.dart';
 import 'package:gpgroup/Commonassets/InputDecoration/CommonInputDecoration.dart';
@@ -26,13 +27,21 @@ class _LoginState extends State<Login> {
     });
   }
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+  }
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final spaceVer = size.height*0.01;
     return  Scaffold(
      resizeToAvoidBottomInset: false,
-     body: loading ?CircularLoading(): Center(
-       child: Container(
-         child:  Form(
+
+     body: Center(
+       child: SingleChildScrollView(
+         child: loading ?CircularLoading(): Form(
            key: _formkey,
            child: Padding(
                padding:  EdgeInsets.symmetric(horizontal: size.width * 0.10),
@@ -40,6 +49,38 @@ class _LoginState extends State<Login> {
                    mainAxisAlignment: MainAxisAlignment.center,
                    crossAxisAlignment: CrossAxisAlignment.center,
                    children: [
+                     Text(
+                         AppLocalizations.of(context).translate('Vrajraj'),
+                       style: TextStyle(
+                         fontSize: size.height*0.05,
+                         fontWeight: FontWeight.bold
+                       ),
+
+                     ),
+                     Text(
+                       AppLocalizations.of(context).translate('Corporation'),
+                       style: TextStyle(
+                           fontSize: size.height*0.035,
+                           fontWeight: FontWeight.bold
+                       ),
+
+                     ),
+               SizedBox(height: spaceVer*2,),
+                Image.asset(
+                  'assets/lock.png',
+                  height: size.height*0.2,
+                  fit: BoxFit.fitHeight,
+                ),
+                     SizedBox(height: spaceVer*2,),
+                     Text(
+                         AppLocalizations.of(context).translate('EnterMobileNumberRegisteredByAdmin'),
+                       textAlign: TextAlign.center,
+                       style: TextStyle(
+                         color: CommonAssets.AppbarTextColor,
+                         fontSize: size.height*0.02
+                       ),
+                     ),
+                     SizedBox(height: spaceVer,),
                TextFormField(
                  keyboardType: TextInputType.phone,
                  maxLength: 10,
@@ -96,10 +137,10 @@ class _LoginState extends State<Login> {
              child: Text(
                AppLocalizations.of(context).translate('Login'),
                style: TextStyle(
-                   color: Colors.white
+                   color: CommonAssets.defaultTextColor
                ),
              ),
-           ),]),),)
+           ),]),),),
        ),
      ),
     );

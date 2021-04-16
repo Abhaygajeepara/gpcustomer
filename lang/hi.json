@@ -167,5 +167,9 @@
   "EMI" :"ई.एम.आई",
   "Paid": "भुगतान किया हुआ",
   "CancelProperty": "रद्द संपत्ति",
-  "OwnProperty": "अपनी संपत्ति"
+  "OwnProperty": "अपनी संपत्ति",
+  "RemainingEMI":"शेष ई.एम.आई",
+  "EnterMobileNumberRegisteredByAdmin": "व्यवस्थापक द्वारा पंजीकृत मोबाइल नंबर दर्ज करें",
+  "Vrajraj": "व्रजराज",
+  "Corporation": "कॉर्पोरेशन"
 }

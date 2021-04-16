@@ -59,38 +59,8 @@ class _RulesLanguageState extends State<RulesLanguage> {
               ),
               child: ListTile(
 
-                onLongPress: ()async{
-
-                  return showDialog(
-                      context: context,
-                      builder: (BuildContext context){
-                        return AlertDialog(
-                          title: Text(AppLocalizations.of(context).translate('AreYouSure')),
-                          content: Text(AppLocalizations.of(context).translate('YouWantToDeleteThisRule')),
-                          actions: [
-                            RaisedButton(
-                              color: Theme.of(context).buttonColor,
-                              shape: StadiumBorder(),
-                              onPressed: ()async{
-                                Navigator.pop(context);
-                              },
-                              child: Text(
-                                AppLocalizations.of(context).translate('Cancel'),
-                                style: TextStyle(
-                                    color: CommonAssets.AppbarTextColor
-                                ),
-                              ),
-
-                            ),
 
 
-                          ],
-                        );
-                      }
-                  );
-                },
-                // color: index % 2 ==0?Colors.black:Colors.tealAccent,
-                // elevation: index % 2 ==0? 0.0:50.0,
 
                 title: Text(
                   widget.rulesdata[index],

@@ -17,7 +17,9 @@ class _CustomerPropertiesState extends State<CustomerProperties> {
   Widget build(BuildContext context) {
     final _projectRetrieve = Provider.of<ProjectRetrieve>(context);
     return Scaffold(
-      appBar: CommonappBar(Container()),
+      appBar: CommonappBar(
+          _projectRetrieve.projectName,
+          Container()),
       body: ListView.builder(
           itemCount:widget.customerProperties.length,
           itemBuilder: (context,index){
@@ -25,7 +27,7 @@ class _CustomerPropertiesState extends State<CustomerProperties> {
             return Card(
               shape: RoundedRectangleBorder(
                   side: BorderSide(
-                      color: Theme.of(context).primaryColor
+                      color: CommonAssets.boxBorderColors
                   )
               ),
               child: ListTile(

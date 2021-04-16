@@ -25,24 +25,24 @@ InputDecoration commoninputdecoration = InputDecoration(
 
 InputDecoration loginAndsignincommoninputdecoration = InputDecoration(
 
-    enabledBorder: OutlineInputBorder(
+    enabledBorder: UnderlineInputBorder(
       borderSide: BorderSide(color: Colors.blueGrey),
       borderRadius: BorderRadius.circular(10.0)
     ),
-    disabledBorder: OutlineInputBorder(
+    disabledBorder: UnderlineInputBorder(
       borderSide: BorderSide(color: Colors.blueGrey),
         borderRadius: BorderRadius.circular(10.0)
     ),
-    focusedBorder: OutlineInputBorder(
+    focusedBorder: UnderlineInputBorder(
       borderSide: BorderSide(color: Colors.black),
         borderRadius: BorderRadius.circular(10.0)
     ),
-    focusedErrorBorder: OutlineInputBorder(
+    focusedErrorBorder: UnderlineInputBorder(
       borderSide: BorderSide(color: Colors.red),
         borderRadius: BorderRadius.circular(10.0)
 
     ),
-    errorBorder: OutlineInputBorder(
+    errorBorder: UnderlineInputBorder(
       borderSide: BorderSide(color: Colors.red),
         borderRadius: BorderRadius.circular(10.0)
 

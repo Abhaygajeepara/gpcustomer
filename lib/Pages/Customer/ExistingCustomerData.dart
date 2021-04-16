@@ -2,9 +2,11 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gpgroup/Commonassets/CommonLoading.dart';
 import 'package:gpgroup/Commonassets/Commonassets.dart';
 import 'package:gpgroup/Commonassets/InputDecoration/CommonInputDecoration.dart';
+import 'package:gpgroup/Commonassets/Widgets/toaster.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
 import 'package:gpgroup/Model/Loan/LoanInfo.dart';
 import 'package:gpgroup/Model/Project/InnerData.dart';
@@ -58,7 +60,9 @@ class _LoanInfoState extends State<LoanInfo> {
 
     return Scaffold(
 
-      appBar: CommonappBar(Container()),
+      appBar: CommonappBar(
+          projectRetrieve.loadId,
+          Container()),
       body:SingleChildScrollView(
         child: StreamBuilder<BookingAndLoan>(
           stream: projectRetrieve.BOOKINGANDLOAN(),
@@ -80,7 +84,7 @@ class _LoanInfoState extends State<LoanInfo> {
                               ),
                             )
                         ),
-                        Divider(color: Theme.of(context).primaryColor,thickness:2 ,),
+                        Divider(color: Theme.of(context).dividerColor,thickness:2 ,),
                         // customer information
                         ExpansionTile(
                           //childrenPadding: EdgeInsets.all(8),
@@ -418,8 +422,8 @@ class _LoanInfoState extends State<LoanInfo> {
                            child: ListTile(
                              onTap: (){
 
-
-                                 return    Navigator.push(context, PageRouteBuilder(
+                             return  snapshot.data.loanData[emiIndex].emiPending?toaster(AppLocalizations.of(context).translate('RemainingEMI')):
+                                     Navigator.push(context, PageRouteBuilder(
                                    pageBuilder: (_, __, ___) =>PaidEmiDetails(singlePropertiesLoanInfo:  snapshot.data.loanData[emiIndex],),
                                    transitionDuration: Duration(seconds: 0),
                                  ),);
@@ -452,7 +456,9 @@ class _LoanInfoState extends State<LoanInfo> {
               );
             }
             else{
-              return CircularLoading();
+              return Container(
+                  height: size.height,
+                  child: Center(child: CircularLoading()));
             }
           }
         ),
@@ -466,7 +472,7 @@ class _LoanInfoState extends State<LoanInfo> {
               print(emiPage);
             });
           },
-          child: Text(emiPage ?
+          child: Text(!emiPage ?
           AppLocalizations.of(context).translate('LoanInformation')
               :AppLocalizations.of(context).translate('PropertyInformation'),
             style: TextStyle(
@@ -503,7 +509,7 @@ class _LoanInfoState extends State<LoanInfo> {
                               Text(
                                 AppLocalizations.of(context).translate('Total'),
                                 style: TextStyle(
-                                    color: CommonAssets.AppbarTextColor,
+                                    color: CommonAssets.defaultTextColor,
                                     fontWeight: FontWeight.bold,
                                     fontSize: fontSize
                                 ),
@@ -511,7 +517,7 @@ class _LoanInfoState extends State<LoanInfo> {
                               Text(
                                 AppLocalizations.of(context).translate('EMI'),
                                 style: TextStyle(
-                                    color: CommonAssets.AppbarTextColor,
+                                    color: CommonAssets.defaultTextColor,
                                     fontWeight: FontWeight.bold,
                                     fontSize: fontSize
                                 ),
@@ -523,7 +529,7 @@ class _LoanInfoState extends State<LoanInfo> {
                               Text(
                                 totalAmount .toString(),
                                 style: TextStyle(
-                                    color: CommonAssets.AppbarTextColor,
+                                    color: CommonAssets.defaultTextColor,
 
                                     fontSize: fontSize
                                 ),
@@ -539,7 +545,7 @@ class _LoanInfoState extends State<LoanInfo> {
                               Text(
                                 AppLocalizations.of(context).translate('Paid'),
                                 style: TextStyle(
-                                    color: CommonAssets.AppbarTextColor,
+                                    color: CommonAssets.defaultTextColor,
                                     fontWeight: FontWeight.bold,
                                     fontSize: fontSize
                                 ),
@@ -547,7 +553,7 @@ class _LoanInfoState extends State<LoanInfo> {
                               Text(
                                 AppLocalizations.of(context).translate('EMI'),
                                 style: TextStyle(
-                                    color: CommonAssets.AppbarTextColor,
+                                    color: CommonAssets.defaultTextColor,
                                     fontWeight: FontWeight.bold,
                                     fontSize: fontSize
                                 ),
@@ -558,7 +564,7 @@ class _LoanInfoState extends State<LoanInfo> {
                               Text(
                                 paidAmount.toString(),
                                 style: TextStyle(
-                                    color: CommonAssets.AppbarTextColor,
+                                    color: CommonAssets.defaultTextColor,
 
                                     fontSize: fontSize
                                 ),
@@ -574,7 +580,7 @@ class _LoanInfoState extends State<LoanInfo> {
                               Text(
                                 AppLocalizations.of(context).translate('Remaining'),
                                 style: TextStyle(
-                                    color: CommonAssets.AppbarTextColor,
+                                    color: CommonAssets.defaultTextColor,
                                     fontWeight: FontWeight.bold,
                                     fontSize: fontSize
                                 ),
@@ -582,7 +588,7 @@ class _LoanInfoState extends State<LoanInfo> {
                               Text(
                                 AppLocalizations.of(context).translate('EMI'),
                                 style: TextStyle(
-                                    color: CommonAssets.AppbarTextColor,
+                                    color: CommonAssets.defaultTextColor,
                                     fontWeight: FontWeight.bold,
                                     fontSize: fontSize
                                 ),
@@ -594,7 +600,7 @@ class _LoanInfoState extends State<LoanInfo> {
                               Text(
                                 remainingAmount.toString(),
                                 style: TextStyle(
-                                    color: CommonAssets.AppbarTextColor,
+                                    color: CommonAssets.defaultTextColor,
 
                                     fontSize: fontSize
                                 ),
@@ -611,4 +617,5 @@ class _LoanInfoState extends State<LoanInfo> {
 
     );
   }
+
 }

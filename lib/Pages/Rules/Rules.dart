@@ -37,7 +37,7 @@ class _RulesState extends State<Rules> {
     return Scaffold(
         appBar: CommonappBar(
 
-
+          AppLocalizations.of(context).translate('Rules'),
             Container()
 
             //     PopupMenuButton(itemBuilder: (BuildContext contex){
@@ -49,22 +49,19 @@ class _RulesState extends State<Rules> {
             //   }).toList();
             // })
             ),
-        body: Column(
-          children: [
-            Expanded(
-                child: Card(
-              child:       PageView(
-          controller: _pageContoller,
-          children: [
-            // isdeleteon's local variable define above
-            RulesLanguage(rulesdata: widget.englishRules, ),
-            RulesLanguage(rulesdata: widget.gujaratiRules,),
-            RulesLanguage(rulesdata: widget.hindiRules,),
-          ],
-        ),
-            )),
-
-          ],
+        body: Padding(
+          padding:  EdgeInsets.symmetric(vertical: size.height*0.01,horizontal: size.width*0.01),
+          child: Card(
+            child:       PageView(
+              controller: _pageContoller,
+              children: [
+                // isdeleteon's local variable define above
+                RulesLanguage(rulesdata: widget.englishRules, ),
+                RulesLanguage(rulesdata: widget.gujaratiRules,),
+                RulesLanguage(rulesdata: widget.hindiRules,),
+              ],
+            ),
+          ),
         ));
   }
 

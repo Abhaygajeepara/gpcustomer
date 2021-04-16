@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:gpgroup/Model/Advertise/AdvertiseMode.dart';
 import 'package:gpgroup/Model/AppVersion/Version.dart';
 import 'package:gpgroup/Model/Income/Income.dart';
@@ -14,6 +15,7 @@ import 'package:rxdart/rxdart.dart';
 class ProjectRetrieve{
  String brokerId;
   String customerId;
+  String customerName;
   String loadId;
   String projectName;
  String partOfSociety;
@@ -33,8 +35,12 @@ class ProjectRetrieve{
    this.partOfSociety = part;
    this.propertiesNumber =propertyId;
  }
-  setCustomer(String id){
+  setCustomer(String id,){
     this.customerId = id;
+
+  }
+  setCustomerMobileNumber(String name){
+   this.customerName =name;
   }
   setLoanRef(String ref){
     this.loadId = ref;

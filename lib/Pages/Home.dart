@@ -166,6 +166,7 @@ class _HomeState extends State<Home> {
   //    // AppLocalizations.of(context).translate('LogOut'),
     return Scaffold(
       appBar: CommonappBar(
+          CommonAssets.apptitle,
          IconButton(icon: Icon(Icons.person), onPressed: (){
        return    AwesomeDialog(
          context: context,
@@ -219,7 +220,9 @@ class _HomeState extends State<Home> {
         child: StreamBuilder<CustomerAndAdvertise>(
             stream: _projectRetrieve.BROKERDATAANDADVERTISE(),
             builder:(context,snapshot){
+
               if(snapshot.hasData){
+                //_projectRetrieve.setCustomerMobileNumber(snapshot.data.customerInfoModel.customerName);
                 //profileData use to display customer data
                 profileData = snapshot.data.customerInfoModel;
 
@@ -304,10 +307,16 @@ class _HomeState extends State<Home> {
                           ),
                           SizedBox(height: size.height * 0.01,),
 
-                          SizedBox(height: size.height * 0.01,),
+                         Divider(color: CommonAssets.AppbarTextColor,thickness: 2,),
+
                           propertiesShow(projectNameSnapshot.data.ownProperties,true,size),
                           SizedBox(height: size.height * 0.01,),
+                          Divider(color: CommonAssets.AppbarTextColor,thickness: 2,),
+                          SizedBox(height: size.height * 0.01,),
+
                           propertiesShow(projectNameSnapshot.data.soldProperties,false,size),
+                          SizedBox(height: size.height * 0.01,),
+                          Divider(color: CommonAssets.AppbarTextColor,thickness: 2,),
                           //  Expanded(child: redirect(snapshot.data,_projectRetrieve,size))
 
                         ],
@@ -369,7 +378,7 @@ Widget propertiesShow(List<ProjectNameList> projectDataList,bool isOwn,Size size
     List<Map<String ,dynamic>> dataProperties ;
     bool isOwnPropertiesPage;
     final fontSize = size.height*0.02;
-
+    final _projectRetrieve = Provider.of<ProjectRetrieve>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -406,6 +415,7 @@ Widget propertiesShow(List<ProjectNameList> projectDataList,bool isOwn,Size size
 
                     dataProperties  = isOwn?ownProperties[projectFindIndex]:soldProperties[projectFindIndex];
                     isOwnPropertiesPage = isOwn?true:false;
+
                     // print(projectDataList[index].projectName);
                     // print(projectFindIndex);
                     return Navigator.push(context, PageRouteBuilder(pageBuilder:(_,__,___)=>

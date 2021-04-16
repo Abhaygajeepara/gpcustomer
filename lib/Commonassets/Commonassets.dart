@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 
 class CommonAssets{
    //static Color AppbarColor =   Color(0xff73c5bc);
-//static Color AppbarColor =   Colors.black;
-  static Color AppbarTextColor = Colors.white;
+static Color defaultTextColor =   Colors.black;
+  static Color AppbarTextColor = Colors.grey;
   static Color buttonTextColor = Colors.white;
-  static String apptitle = 'GP Group ';
+  static Color appBarDrawerColor = Colors.red;
+  static Color activeLanguageColor = Colors.red;
+
+  static String apptitle = 'Vrajraj Corporation';
   // only for loading page
-  static Color buttonColor =Color(0xff0cb1b7);
+  static Color buttonColor =Color(0xfff2cb30);
   static Color cardBackGround = Colors.white70;
   static Color standardtextcolor = Colors.black;
   static double titletextsize  = 25.0;

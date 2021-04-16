@@ -164,5 +164,9 @@
  "EMI" :"ઇ.એમ.આઈ",
   "Paid": "ચૂકવેલ",
   "CancelProperty": "રદ કરો મિલકત",
-  "OwnProperty": "પોતાની સંપત્તિ"
+  "OwnProperty": "પોતાની સંપત્તિ",
+  "RemainingEMI":"બાકી ઇ.એમ.આઈ",
+  "EnterMobileNumberRegisteredByAdmin": "એડમિન દ્વારા નોંધાયેલ મોબાઇલ નંબર દાખલ કરો",
+  "Vrajraj": "વ્રજરાજ",
+  "Corporation": "કોર્પોરેશન"
 }

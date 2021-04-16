@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gpgroup/Commonassets/Commonassets.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
 import 'package:zoom_widget/zoom_widget.dart';
 
@@ -22,7 +23,9 @@ class _ImageZoomState extends State<ImageZoom> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: CommonappBar(Container()),
+      appBar: CommonappBar(
+      CommonAssets.apptitle
+      ,Container()),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [

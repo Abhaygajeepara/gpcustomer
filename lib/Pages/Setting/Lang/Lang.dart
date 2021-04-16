@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gpgroup/Commonassets/CommonLoading.dart';
+import 'package:gpgroup/Commonassets/Commonassets.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
 import 'package:gpgroup/Service/Lang/LangChange.dart';
+import 'package:gpgroup/app_localization/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class SelectLanguage extends StatefulWidget {
@@ -36,7 +38,9 @@ class _SelectLanguageState extends State<SelectLanguage> {
 
     final langChange = Provider.of<LangChange>(context);
     return Scaffold(
-      appBar: CommonappBar(Container()),
+      appBar: CommonappBar(
+      AppLocalizations.of(context).translate('Language')
+      ,Container()),
       body: Padding(
         padding: EdgeInsets.all(10.0),
         child:loading?CircularLoading(): ListView.builder(
@@ -59,7 +63,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                   title: Text(
                     lang[index],
                     style: TextStyle(
-                        color: langCode[index] == preferences.getString('Language')?Theme.of(context).primaryColor:Colors.black
+                        color: langCode[index] == preferences.getString('Language')?CommonAssets.activeLanguageColor:CommonAssets.defaultTextColor
                     ),
                   ),
                 ),
