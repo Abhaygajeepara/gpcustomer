@@ -20,11 +20,11 @@ class ProjectRetrieve{
   String projectName;
  String partOfSociety;
  String propertiesNumber;
- String typeOfProject;
+// String typeOfProject;
 
- setProjectName(String val,String projectType,){
+ setProjectName(String val,){
    this.projectName  = val;
-   this.typeOfProject = projectType;
+   //this.typeOfProject = projectType;
 
  }
  // setPropertiesLoanRef(String loanrefs, ){

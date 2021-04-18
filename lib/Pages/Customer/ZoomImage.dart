@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:gpgroup/Commonassets/CommonLoading.dart';
 import 'package:gpgroup/Commonassets/Commonassets.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
 import 'package:zoom_widget/zoom_widget.dart';
@@ -42,20 +44,27 @@ class _ImageZoomState extends State<ImageZoom> {
                   });
                 },
                 child: Card(
-                  child: Image.network(
-                    widget.image[index],
-                    width: size.width *0.2,
-                    height: size.height*0.1,
-                    fit:BoxFit.cover,
-
-
+                  child:
+                  CachedNetworkImage(
+                    //fit: BoxFit.cover,
+                    imageUrl:   widget.image[index],
+                    placeholder: (context, url) => Center(child: CircularLoading(),),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
+                  // Image.network(
+                  //   widget.image[index],
+                  //   width: size.width *0.2,
+                  //   height: size.height*0.1,
+                  //   fit:BoxFit.cover,
+                  //
+                  //
+                  // ),
                 ),
               );
             }),
           ),
           VerticalDivider(
-            color: Theme.of(context).primaryColor,
+            color: CommonAssets.appBarDrawerColor,
             thickness: 2,
           ),
           Expanded(

@@ -32,7 +32,7 @@ class _CustomerPropertiesState extends State<CustomerProperties> {
               ),
               child: ListTile(
                 onTap: ()async{
-                  await _projectRetrieve.setProjectName(widget.customerProperties[index]['ProjectName'], '');
+                  await _projectRetrieve.setProjectName(widget.customerProperties[index]['ProjectName']);
                   await _projectRetrieve.setLoanRef(widget.customerProperties[index]['LoanRef']);
                   await _projectRetrieve.setPartOfSociety(widget.customerProperties[index]['Part'],widget.customerProperties[index]['PropertyNumber']);
                   print(_projectRetrieve.projectName);
@@ -45,7 +45,7 @@ class _CustomerPropertiesState extends State<CustomerProperties> {
                     transitionDuration: Duration(milliseconds: 0),
                   ));
                 },
-                title: Text(widget.customerProperties[index]['ProjectName']),
+                title: Text(widget.customerProperties[index]['Part']),
                 subtitle: Text(widget.customerProperties[index]['PropertyNumber']),
               ),
             );

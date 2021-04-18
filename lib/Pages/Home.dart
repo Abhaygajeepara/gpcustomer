@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -280,15 +281,21 @@ class _HomeState extends State<Home> {
                                     Column(
                                       children: [
                                         Expanded(
-                                          child: Image.network(
-                                            snapshot.data.advertiseList[index]
+                                          child: CachedNetworkImage(
+                                            imageUrl:  snapshot.data.advertiseList[index]
                                                 .imageUrl.first,
-                                            width: size.width,
-                                            height: size.height * 0.3,
-                                            fit: BoxFit.fill,
-
-
+                                            placeholder: (context, url) => Center(child: CircularLoading(),),
+                                            errorWidget: (context, url, error) => Icon(Icons.error),
                                           ),
+                                          // Image.network(
+                                          //   snapshot.data.advertiseList[index]
+                                          //       .imageUrl.first,
+                                          //   width: size.width,
+                                          //   height: size.height * 0.3,
+                                          //   fit: BoxFit.fill,
+                                          //
+                                          //
+                                          // ),
                                         ),
                                         AutoSizeText(
                                           snapshot.data.advertiseList[index]
@@ -311,12 +318,12 @@ class _HomeState extends State<Home> {
 
                           propertiesShow(projectNameSnapshot.data.ownProperties,true,size),
                           SizedBox(height: size.height * 0.01,),
-                          Divider(color: CommonAssets.AppbarTextColor,thickness: 2,),
+                         // Divider(color: CommonAssets.AppbarTextColor,thickness: 2,),
                           SizedBox(height: size.height * 0.01,),
 
-                          propertiesShow(projectNameSnapshot.data.soldProperties,false,size),
+                          projectNameSnapshot.data.soldProperties.length <= 0?Container(): propertiesShow(projectNameSnapshot.data.soldProperties,false,size),
                           SizedBox(height: size.height * 0.01,),
-                          Divider(color: CommonAssets.AppbarTextColor,thickness: 2,),
+
                           //  Expanded(child: redirect(snapshot.data,_projectRetrieve,size))
 
                         ],
@@ -390,63 +397,72 @@ Widget propertiesShow(List<ProjectNameList> projectDataList,bool isOwn,Size size
             fontWeight: FontWeight.bold
           ),
         ),
-        Card(
+        Container(
+          height: size.height *0.15,
+          //color: CommonAssets.cardBackGround,
+          decoration: BoxDecoration(
 
-          child: Container(
-            height: size.height *0.15,
-            //color: CommonAssets.cardBackGround,
-            decoration: BoxDecoration(
-                color: CommonAssets.cardBackGround,
-                border: Border.all(
-                    color: Theme.of(context).primaryColor
-                )
-            ),
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: projectDataList.length,itemBuilder: (context,index){
-           //   print(projectDataList[index].projectName);
-              return Padding(
-                padding:  EdgeInsets.symmetric(horizontal: size.width *0.02),
-                child: GestureDetector(
-                  onTap: ()async{
-                    int projectFindIndex = isOwn?
-                    availableOwnProject.indexWhere((element) =>element ==projectDataList[index].projectName)
-                        : availableSoldProject.indexWhere((element) =>element ==projectDataList[index].projectName);
-
-                    dataProperties  = isOwn?ownProperties[projectFindIndex]:soldProperties[projectFindIndex];
-                    isOwnPropertiesPage = isOwn?true:false;
-
-                    // print(projectDataList[index].projectName);
-                    // print(projectFindIndex);
-                    return Navigator.push(context, PageRouteBuilder(pageBuilder:(_,__,___)=>
-                        ProjectData(projectNameList: projectDataList[projectFindIndex], isOwnPropertiesPage: isOwnPropertiesPage, ownProperties: dataProperties)));
-                  },
-                  child: Column(
-                  //  mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        child: CircleAvatar(
-
-                          onBackgroundImageError: (exception, stackTrace) => Text('No Image'),
-                          radius: 50,
-                          backgroundImage: NetworkImage(projectDataList[index].imagesUrl.first),
-                          backgroundColor: Colors.transparent,
-                          //child: Image.network(projectName[index].imagesUrl.first),
-                        ),
-                      ),
-                       AutoSizeText(
-                            projectDataList[index].projectName,
-                         style: TextStyle(
-                            fontSize: fontSize
-                         ),
-
-                      )
-                    ],
-                  ),
-                ),
-              );
-            }),
+              // border: Border.all(
+              //     color: Theme.of(context).primaryColor
+              // )
           ),
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: projectDataList.length,itemBuilder: (context,index){
+         //   print(projectDataList[index].projectName);
+            return Padding(
+              padding:  EdgeInsets.symmetric(horizontal: size.width *0.02),
+              child: GestureDetector(
+                onTap: ()async{
+                  int projectFindIndex = isOwn?
+                  availableOwnProject.indexWhere((element) =>element ==projectDataList[index].projectName)
+                      : availableSoldProject.indexWhere((element) =>element ==projectDataList[index].projectName);
+
+                  dataProperties  = isOwn?ownProperties[projectFindIndex]:soldProperties[projectFindIndex];
+                  isOwnPropertiesPage = isOwn?true:false;
+
+                  // print(projectDataList[index].projectName);
+                  // print(projectFindIndex);
+                  return Navigator.push(context, PageRouteBuilder(pageBuilder:(_,__,___)=>
+                      ProjectData(projectNameList: projectDataList[projectFindIndex], isOwnPropertiesPage: isOwnPropertiesPage, ownProperties: dataProperties)));
+                },
+                child: Column(
+                //  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: Container(
+                          width: size.width /4,
+
+                         decoration: BoxDecoration(
+
+                           borderRadius: BorderRadius.circular(50.0)
+                         ),
+                          child:
+
+                          CachedNetworkImage(
+fit: BoxFit.cover,
+                            imageUrl:  projectDataList[index].imagesUrl.first,
+                            placeholder: (context, url) => Center(child: CircularLoading(),),
+                            errorWidget: (context, url, error) => Icon(Icons.error),
+                          ),
+
+                        ),
+                      )
+                    ),
+                     AutoSizeText(
+                          projectDataList[index].projectName,
+                       style: TextStyle(
+                          fontSize: fontSize
+                       ),
+
+                    )
+                  ],
+                ),
+              ),
+            );
+          }),
         )
       ],
     );
@@ -458,6 +474,7 @@ Widget propertiesShow(List<ProjectNameList> projectDataList,bool isOwn,Size size
         itemBuilder: (context,index){
 
           return Card(
+
             shape: RoundedRectangleBorder(
                 side: BorderSide(
                     color: Theme.of(context).primaryColor
@@ -465,7 +482,7 @@ Widget propertiesShow(List<ProjectNameList> projectDataList,bool isOwn,Size size
             ),
             child: ListTile(
               onTap: ()async{
-                await _projectRetrieve.setProjectName(customerProperties[index]['ProjectName'], '');
+                await _projectRetrieve.setProjectName(customerProperties[index]['ProjectName'],);
                 await _projectRetrieve.setLoanRef(customerProperties[index]['LoanRef']);
                 await _projectRetrieve.setPartOfSociety(customerProperties[index]['Part'],customerProperties[index]['PropertyNumber']);
                 print(_projectRetrieve.projectName);

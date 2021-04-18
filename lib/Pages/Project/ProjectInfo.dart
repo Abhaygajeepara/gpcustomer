@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gpgroup/Commonassets/CommonLoading.dart';
 import 'package:gpgroup/Commonassets/Commonassets.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
 import 'package:gpgroup/Model/Project/ProjectDetails.dart';
@@ -34,7 +36,7 @@ class _ProjectDataState extends State<ProjectData> {
     final smallverSpace =size.width*0.01;
 
     final _projectRetrieve = Provider.of<ProjectRetrieve>(context);
-     _projectRetrieve.setProjectName(widget.projectNameList.projectName,widget.projectNameList.typeofBuilding );
+     _projectRetrieve.setProjectName(widget.projectNameList.projectName );
     String ProjectNameUpperCase  = widget.projectNameList.projectName.substring(0,1).toUpperCase()+ widget.projectNameList.projectName.substring(1);
 
 
@@ -101,14 +103,21 @@ class _ProjectDataState extends State<ProjectData> {
                           //     }
                           // );
                         },
-                        child: Image.network(
-                          widget.projectNameList.imagesUrl[index],
-                          width: size.width,
-                          height:size.height *0.3 ,
-                          fit:BoxFit.fill,
-
-
+                        child:
+                        CachedNetworkImage(
+                          fit: BoxFit.cover,
+                          imageUrl:   widget.projectNameList.imagesUrl[index],
+                          placeholder: (context, url) => Center(child: CircularLoading(),),
+                          errorWidget: (context, url, error) => Icon(Icons.error),
                         ),
+                        // Image.network(
+                        //
+                        //   width: size.width,
+                        //   height:size.height *0.3 ,
+                        //   fit:BoxFit.fill,
+                        //
+                        //
+                        // ),
                       );
                     }
                 ),

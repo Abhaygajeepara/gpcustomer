@@ -9,7 +9,7 @@ class CircularLoading extends StatelessWidget {
         child:
         CircularProgressIndicator(
             semanticsLabel:'Loading' ,
-            valueColor:AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+            valueColor:AlwaysStoppedAnimation<Color>(CommonAssets.appBarDrawerColor),
         backgroundColor: CommonAssets.circularLoadingbackgroud,
 
         )
