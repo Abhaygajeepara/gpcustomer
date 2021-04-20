@@ -39,36 +39,44 @@ class _RulesLanguageState extends State<RulesLanguage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final indexFontSize = size.height *0.02;
     return Column(
       children: [
     Expanded(
       child: ListView.builder(
       itemCount: widget.rulesdata.length,
           itemBuilder: (context,index){
+int rulesNumber =index+1;
+            return Padding(
+              padding:  EdgeInsets.symmetric(vertical: size.height*0.005),
+              child: Row(
+mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
 
-            return
+                  children: [
+                    Text(
 
-            Card(
+                      rulesNumber.toString(),
 
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  side: BorderSide(
+                      style: TextStyle(
 
-                      color: Colors.black.withOpacity(0.3)
-                  )
-              ),
-              child: ListTile(
+                        fontSize:indexFontSize,
+                        fontWeight: FontWeight.bold
+                      ),
 
+                    ),
+                    SizedBox(width: size.width*0.02,),
+                    Flexible(
+                      child: Text(
+                        widget.rulesdata[index].substring(0,1).toUpperCase()+widget.rulesdata[index].substring(1)+"this is additional text which can be remove after testing fuck you monster",
 
-
-
-                title: Text(
-                  widget.rulesdata[index],
-                  style: TextStyle(
-                      fontSize: size.height *0.02
-                  ),
+                        style: TextStyle(
+                            fontSize: size.height *0.02
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
             );
           }),
     ),

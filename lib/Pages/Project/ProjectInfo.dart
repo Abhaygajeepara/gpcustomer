@@ -29,14 +29,14 @@ class _ProjectDataState extends State<ProjectData> {
 
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    double titleTextSize = size.height *0.023;
-    double valueTextSize = size.height *0.02;
+    double titleTextSize = size.height *0.025;
+    double valueTextSize = size.height *0.022;
     double normalSpacce = size.height *0.02;
     final smallHorSpace =size.width*0.01;
     final smallverSpace =size.width*0.01;
 
     final _projectRetrieve = Provider.of<ProjectRetrieve>(context);
-     _projectRetrieve.setProjectName(widget.projectNameList.projectName );
+     _projectRetrieve.setProjectName(widget.projectNameList.projectName,widget.projectNameList.typeofBuilding);
     String ProjectNameUpperCase  = widget.projectNameList.projectName.substring(0,1).toUpperCase()+ widget.projectNameList.projectName.substring(1);
 
 
@@ -129,7 +129,7 @@ class _ProjectDataState extends State<ProjectData> {
 
 
               Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.fromLTRB(size.width*0.04, size.height*0.02, 0, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

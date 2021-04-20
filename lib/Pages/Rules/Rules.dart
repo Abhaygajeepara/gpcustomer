@@ -51,16 +51,14 @@ class _RulesState extends State<Rules> {
             ),
         body: Padding(
           padding:  EdgeInsets.symmetric(vertical: size.height*0.01,horizontal: size.width*0.01),
-          child: Card(
-            child:       PageView(
-              controller: _pageContoller,
-              children: [
-                // isdeleteon's local variable define above
-                RulesLanguage(rulesdata: widget.englishRules, ),
-                RulesLanguage(rulesdata: widget.gujaratiRules,),
-                RulesLanguage(rulesdata: widget.hindiRules,),
-              ],
-            ),
+          child: PageView(
+            controller: _pageContoller,
+            children: [
+              // isdeleteon's local variable define above
+              RulesLanguage(rulesdata: widget.englishRules, ),
+              RulesLanguage(rulesdata: widget.gujaratiRules,),
+              RulesLanguage(rulesdata: widget.hindiRules,),
+            ],
           ),
         ));
   }

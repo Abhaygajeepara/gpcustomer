@@ -397,8 +397,9 @@ Widget propertiesShow(List<ProjectNameList> projectDataList,bool isOwn,Size size
             fontWeight: FontWeight.bold
           ),
         ),
+        SizedBox(height: size.height*0.02,),
         Container(
-          height: size.height *0.15,
+          height: size.height *0.18,
           //color: CommonAssets.cardBackGround,
           decoration: BoxDecoration(
 
@@ -411,7 +412,7 @@ Widget propertiesShow(List<ProjectNameList> projectDataList,bool isOwn,Size size
               itemCount: projectDataList.length,itemBuilder: (context,index){
          //   print(projectDataList[index].projectName);
             return Padding(
-              padding:  EdgeInsets.symmetric(horizontal: size.width *0.02),
+              padding:  EdgeInsets.symmetric(horizontal: size.width *0.04),
               child: GestureDetector(
                 onTap: ()async{
                   int projectFindIndex = isOwn?
@@ -430,19 +431,23 @@ Widget propertiesShow(List<ProjectNameList> projectDataList,bool isOwn,Size size
                 //  mainAxisSize: MainAxisSize.min,
                   children: [
                     Expanded(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10.0),
+                      child: Card(
+                        clipBehavior: Clip.hardEdge,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)
+                        ),
+                        elevation: 10,
                         child: Container(
                           width: size.width /4,
-
+                       //clipBehavior: Clip.hardEdge,
                          decoration: BoxDecoration(
 
-                           borderRadius: BorderRadius.circular(50.0)
+                          // borderRadius: BorderRadius.circular(10.0),
                          ),
                           child:
 
                           CachedNetworkImage(
-fit: BoxFit.cover,
+                            fit: BoxFit.fitHeight,
                             imageUrl:  projectDataList[index].imagesUrl.first,
                             placeholder: (context, url) => Center(child: CircularLoading(),),
                             errorWidget: (context, url, error) => Icon(Icons.error),
@@ -451,6 +456,7 @@ fit: BoxFit.cover,
                         ),
                       )
                     ),
+                     SizedBox(height:size.height*0.01),
                      AutoSizeText(
                           projectDataList[index].projectName,
                        style: TextStyle(
@@ -482,7 +488,7 @@ fit: BoxFit.cover,
             ),
             child: ListTile(
               onTap: ()async{
-                await _projectRetrieve.setProjectName(customerProperties[index]['ProjectName'],);
+                await _projectRetrieve.setProjectName(customerProperties[index]['ProjectName'],'');
                 await _projectRetrieve.setLoanRef(customerProperties[index]['LoanRef']);
                 await _projectRetrieve.setPartOfSociety(customerProperties[index]['Part'],customerProperties[index]['PropertyNumber']);
                 print(_projectRetrieve.projectName);

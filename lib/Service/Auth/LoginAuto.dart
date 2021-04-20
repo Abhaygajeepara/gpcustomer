@@ -55,12 +55,13 @@ final customerRef = FirebaseFirestore.instance.collection('Customer');
 
 Future signouts(String customerID)async{
     try{
+      await _auth.signOut();
       String notificationToken = await _firebaseMessaging.getToken();
       print('notificationToken=${notificationToken}');
       await customerRef.doc(customerID).update({
         "NotificationKey":FieldValue.arrayRemove([notificationToken]),
       });
-      await _auth.signOut();
+
     }
     catch(e){
       print(e.toString());

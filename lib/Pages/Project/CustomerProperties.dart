@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gpgroup/Commonassets/Commonassets.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
@@ -13,40 +14,84 @@ class CustomerProperties extends StatefulWidget {
 }
 
 class _CustomerPropertiesState extends State<CustomerProperties> {
+
+  List<String> imageList =[
+    'assets/house.png',
+    'assets/apartment.png',
+    'assets/Commercial.png',
+    'assets/mixed-use.png'
+
+  ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
   @override
   Widget build(BuildContext context) {
+    String image ;
+    final size = MediaQuery.of(context).size;
+    final partFontSize = size.height*0.025;
+    final propertiesFontSize = size.height*0.02;
     final _projectRetrieve = Provider.of<ProjectRetrieve>(context);
+
+    String typeofProject =_projectRetrieve.typeOfProject;
+    print(typeofProject);
+    if(typeofProject=='Society'){
+      image = imageList[0];
+    }
+    else  if(typeofProject=='Apartment'){
+      image = imageList[1];
+    }
+    else  if(typeofProject=='CommercialArcade'){
+      image = imageList[2];
+    }
+    else {
+      image =  imageList[3];
+    }
     return Scaffold(
       appBar: CommonappBar(
           _projectRetrieve.projectName,
           Container()),
-      body: ListView.builder(
+      body: GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2),
           itemCount:widget.customerProperties.length,
           itemBuilder: (context,index){
 
-            return Card(
-              shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                      color: CommonAssets.boxBorderColors
-                  )
-              ),
-              child: ListTile(
-                onTap: ()async{
-                  await _projectRetrieve.setProjectName(widget.customerProperties[index]['ProjectName']);
-                  await _projectRetrieve.setLoanRef(widget.customerProperties[index]['LoanRef']);
-                  await _projectRetrieve.setPartOfSociety(widget.customerProperties[index]['Part'],widget.customerProperties[index]['PropertyNumber']);
-                  print(_projectRetrieve.projectName);
-                  print(_projectRetrieve.loadId);
-                  print(_projectRetrieve.partOfSociety);
-                  print(_projectRetrieve.propertiesNumber);
-                  Navigator.push(context, PageRouteBuilder(
-                    //    pageBuilder: (_,__,____) => BuildingStructure(),
-                    pageBuilder: (_,__,___)=> LoanInfo(),
-                    transitionDuration: Duration(milliseconds: 0),
-                  ));
-                },
-                title: Text(widget.customerProperties[index]['Part']),
-                subtitle: Text(widget.customerProperties[index]['PropertyNumber']),
+            return GestureDetector(
+             onTap: ()async{
+               await _projectRetrieve.setLoanRef(widget.customerProperties[index]['LoanRef']);
+               await _projectRetrieve.setPartOfSociety(widget.customerProperties[index]['Part'],widget.customerProperties[index]['PropertyNumber']);
+               Navigator.push(context, PageRouteBuilder(
+                 pageBuilder: (_,__,___)=> LoanInfo(),
+                 transitionDuration: Duration(milliseconds: 0),
+               ));
+               },
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                        color: CommonAssets.boxBorderColors
+                    )
+                ),
+                child: Column(
+                  children: [
+                    Expanded(child: Image.asset(image)),
+                    Text(
+                        widget.customerProperties[index]['Part'],
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize:partFontSize
+                    ),
+                    ),
+                     Text(widget.customerProperties[index]['PropertyNumber'],
+                     style: TextStyle(
+                       fontSize: propertiesFontSize,
+                     ),
+                     ),
+                  ],
+                )
               ),
             );
           }
