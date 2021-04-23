@@ -40,7 +40,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
     return Scaffold(
       appBar: CommonappBar(
       AppLocalizations.of(context).translate('Language')
-      ,Container()),
+      ,Container(),context),
       body: Padding(
         padding: EdgeInsets.all(10.0),
         child:loading?CircularLoading(): ListView.builder(

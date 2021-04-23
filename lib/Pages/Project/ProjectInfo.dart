@@ -50,7 +50,7 @@ class _ProjectDataState extends State<ProjectData> {
                 gujaratiRules: widget.projectNameList.gujaratiRules,
                 hindiRules: widget.projectNameList.hindiRules
             )));
-      },),),
+      },),context),
       body: SingleChildScrollView(
         child: Padding(
           padding:  EdgeInsets.symmetric( vertical: 8.0),

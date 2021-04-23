@@ -38,7 +38,7 @@ class _RulesState extends State<Rules> {
         appBar: CommonappBar(
 
           AppLocalizations.of(context).translate('Rules'),
-            Container()
+            Container(),context
 
             //     PopupMenuButton(itemBuilder: (BuildContext contex){
             //   return {'Logout', 'Settings'}.map((String choice) {
@@ -51,15 +51,20 @@ class _RulesState extends State<Rules> {
             ),
         body: Padding(
           padding:  EdgeInsets.symmetric(vertical: size.height*0.01,horizontal: size.width*0.01),
-          child: PageView(
-            controller: _pageContoller,
+          child: Column(
             children: [
-              // isdeleteon's local variable define above
-              RulesLanguage(rulesdata: widget.englishRules, ),
-              RulesLanguage(rulesdata: widget.gujaratiRules,),
-              RulesLanguage(rulesdata: widget.hindiRules,),
+              Expanded(child: PageView(
+                controller: _pageContoller,
+                children: [
+                  // isdeleteon's local variable define above
+                  RulesLanguage(rulesdata: widget.englishRules, ),
+                  RulesLanguage(rulesdata: widget.gujaratiRules,),
+                  RulesLanguage(rulesdata: widget.hindiRules,),
+                ],
+              ),),
+              Text(AppLocalizations.of(context).translate('SwipeToChangeRulesLanguage'))
             ],
-          ),
+          )
         ));
   }
 

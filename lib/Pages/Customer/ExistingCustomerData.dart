@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,9 +11,14 @@ import 'package:gpgroup/Commonassets/InputDecoration/CommonInputDecoration.dart'
 import 'package:gpgroup/Commonassets/Widgets/toaster.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
 import 'package:gpgroup/Model/Loan/LoanInfo.dart';
+import 'package:gpgroup/Model/Loan/statement.dart';
 import 'package:gpgroup/Model/Project/InnerData.dart';
 import 'package:gpgroup/Model/Users/CustomerModel.dart';
 import 'package:gpgroup/Pages/Customer/PaidEmiDetails.dart';
+import 'package:gpgroup/Pages/Pdf/PdfPreview.dart';
+
+import 'package:gpgroup/Pages/Pdf/generatePdf.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:gpgroup/Service/ProjectRetrieve.dart';
 import 'package:gpgroup/app_localization/app_localizations.dart';
@@ -26,49 +33,68 @@ class _LoanInfoState extends State<LoanInfo> {
   final  _formKey = GlobalKey<FormState>();
 
   bool emiPage = false;
-  int totalAmount =  0;
-  int paidAmount = 0;
-  int remainingAmount = 0;
+  int totalEmi =  0;
+  int paidEmi = 0;
+  int remainingEmi = 0;
   int pageIndex =0;
+  int emiAmount =0;
   List<SinglePropertiesLoanInfo> paidEmiData =[];
   List<SinglePropertiesLoanInfo> remainingEmiData =[];
+  List<StatementModel> statementList=[];
+  String pdfPath ;
+bool loading = false;
   @override
   Widget build(BuildContext context) {
     final projectRetrieve = Provider.of<ProjectRetrieve>(context);
 
     final size = MediaQuery.of(context).size;
-    final titileSize = size.height /size.width  *8 ;
-    final mainTitileSize = size.height /size.width *16 ;
-    final normatTextSize = size.height /size.width  *7;
-    final fontWeight =FontWeight.bold;
-    final  verticalSizeBox = size.height *0.05;
-    final  expanedTileSpace =size.height *0.012;
-    final fontSize = size.height *0.02;
+
+    // projectRetrieve.setProjectName('vrajraj', 'House');
+    // projectRetrieve.setLoanRef('(1)vrajraj-0-2');
+    //
+    // projectRetrieve.setPartOfSociety('0', '2');
   calculation(List<SinglePropertiesLoanInfo> loanData,BookingDataModel bookingDataModel){
     remainingEmiData=[];
     paidEmiData =[];
-    totalAmount =  0;
-     paidAmount = 0;
-     remainingAmount = 0;
+    totalEmi =  0;
+     paidEmi = 0;
+     remainingEmi = 0;
+    statementList=[];
+    totalEmi = loanData.length;
       for(int i=0;i<loanData.length;i++){
-        totalAmount = totalAmount+1;
+
+        emiAmount = loanData[i].amount;
+  int _paidAmount =0;
+  int _remainingAmount = 0;
+  int emiNumber =i+1;
+
+     //   print(totalEmi);
         if(loanData[i].emiPending){
-          remainingAmount = remainingAmount+1;
+          remainingEmi = remainingEmi+1;
           remainingEmiData.add(loanData[i]);
+
+
         }
         else{
-          paidAmount =paidAmount +1;
+          paidEmi =paidEmi +1;
           paidEmiData.add(loanData[i]);
+
         }
+        _paidAmount = emiNumber*emiAmount;
+        _remainingAmount = (emiAmount*totalEmi)-(emiAmount * emiNumber);
+
+     StatementModel data =   StatementModel.of(loanData[i], emiNumber, _paidAmount, _remainingAmount);
+        statementList.add(data);
       }
 
+  loading = false;
   }
 
     return Scaffold(
 
       appBar: CommonappBar(
           projectRetrieve.loadId,
-          Container()),
+          Container(),context),
       body:SingleChildScrollView(
         child: StreamBuilder<BookingAndLoan>(
           stream: projectRetrieve.BOOKINGANDLOAN(),
@@ -106,7 +132,8 @@ class _LoanInfoState extends State<LoanInfo> {
           onPressed: (){
             setState(() {
               emiPage = !emiPage;
-              print(emiPage);
+              loading = true;
+
             });
           },
           child: Text(!emiPage ?
@@ -118,140 +145,6 @@ class _LoanInfoState extends State<LoanInfo> {
           ),
         ),
 
-      // bottomNavigationBar: !emiPage?Container(height: 1,): Theme(
-      //     data: Theme.of(context).copyWith(
-      //       primaryColor: Theme.of(context).primaryColor,
-      //     ),
-      //     child:
-      //
-      //     Padding(
-      //         padding:  EdgeInsets.all(8.0),
-      //         child: Container(
-      //
-      //           decoration: BoxDecoration(
-      //             color:  Theme.of(context).primaryColor,
-      //             borderRadius: BorderRadius.circular(10.0),
-      //
-      //           ),
-      //
-      //           child: Padding(
-      //               padding:  EdgeInsets.all(8.0),
-      //               child: Row(
-      //                 children: [
-      //                   Expanded(
-      //                     child: Column(
-      //                       mainAxisSize: MainAxisSize.min,
-      //
-      //                       children: [
-      //                         Text(
-      //                           AppLocalizations.of(context).translate('Total'),
-      //                           style: TextStyle(
-      //                               color: CommonAssets.defaultTextColor,
-      //                               fontWeight: FontWeight.bold,
-      //                               fontSize: fontSize
-      //                           ),
-      //                         ),
-      //                         Text(
-      //                           AppLocalizations.of(context).translate('EMI'),
-      //                           style: TextStyle(
-      //                               color: CommonAssets.defaultTextColor,
-      //                               fontWeight: FontWeight.bold,
-      //                               fontSize: fontSize
-      //                           ),
-      //                         ),
-      //
-      //                         SizedBox(
-      //                           height: titileSize /2,
-      //                         ),
-      //                         Text(
-      //                           totalAmount .toString(),
-      //                           style: TextStyle(
-      //                               color: CommonAssets.defaultTextColor,
-      //
-      //                               fontSize: fontSize
-      //                           ),
-      //                         ),
-      //                       ],
-      //                     ),
-      //                   ),
-      //                   Expanded(
-      //                     child: Column(
-      //                       mainAxisSize: MainAxisSize.min,
-      //
-      //                       children: [
-      //                         Text(
-      //                           AppLocalizations.of(context).translate('Paid'),
-      //                           style: TextStyle(
-      //                               color: CommonAssets.defaultTextColor,
-      //                               fontWeight: FontWeight.bold,
-      //                               fontSize: fontSize
-      //                           ),
-      //                         ),
-      //                         Text(
-      //                           AppLocalizations.of(context).translate('EMI'),
-      //                           style: TextStyle(
-      //                               color: CommonAssets.defaultTextColor,
-      //                               fontWeight: FontWeight.bold,
-      //                               fontSize: fontSize
-      //                           ),
-      //                         ),
-      //                         SizedBox(
-      //                           height: titileSize /2,
-      //                         ),
-      //                         Text(
-      //                           paidAmount.toString(),
-      //                           style: TextStyle(
-      //                               color: CommonAssets.defaultTextColor,
-      //
-      //                               fontSize: fontSize
-      //                           ),
-      //                         ),
-      //                       ],
-      //                     ),
-      //                   ),
-      //                   Expanded(
-      //                     child: Column(
-      //                       mainAxisSize: MainAxisSize.min,
-      //
-      //                       children: [
-      //                         Text(
-      //                           AppLocalizations.of(context).translate('Remaining'),
-      //                           style: TextStyle(
-      //                               color: CommonAssets.defaultTextColor,
-      //                               fontWeight: FontWeight.bold,
-      //                               fontSize: fontSize
-      //                           ),
-      //                         ),
-      //                         Text(
-      //                           AppLocalizations.of(context).translate('EMI'),
-      //                           style: TextStyle(
-      //                               color: CommonAssets.defaultTextColor,
-      //                               fontWeight: FontWeight.bold,
-      //                               fontSize: fontSize
-      //                           ),
-      //                         ),
-      //
-      //                         SizedBox(
-      //                           height: titileSize /2,
-      //                         ),
-      //                         Text(
-      //                           remainingAmount.toString(),
-      //                           style: TextStyle(
-      //                               color: CommonAssets.defaultTextColor,
-      //
-      //                               fontSize: fontSize
-      //                           ),
-      //                         ),
-      //                       ],
-      //                     ),
-      //                   ),
-      //                 ],
-      //               )
-      //           ),
-      //         )
-      //     )
-      // ),
-
     );
   }
   Widget emiType(BookingAndLoan snapshot){
@@ -259,8 +152,8 @@ class _LoanInfoState extends State<LoanInfo> {
     final fontSize = size.height*0.017;
     List<String> titleList =[
       AppLocalizations.of(context).translate('AllEMI')+"(${snapshot.loanData.length.toString()})",
-      AppLocalizations.of(context).translate('PaidEMI')+"(${paidAmount})",
-      AppLocalizations.of(context).translate('RemainingEMI')+"(${remainingAmount})"
+      AppLocalizations.of(context).translate('PaidEMI')+"(${paidEmi})",
+      AppLocalizations.of(context).translate('RemainingEMI')+"(${remainingEmi})"
     ];
     return Padding(
       padding: EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.width *0.01),
@@ -323,8 +216,288 @@ class _LoanInfoState extends State<LoanInfo> {
     else  {
       // all emi
 
-      return loanInfo(snapshot.loanData);
+      return statement(snapshot);
     }
+  }
+
+  Widget statement(BookingAndLoan snapshot){
+    final projectRetrieve = Provider.of<ProjectRetrieve>(context);
+ 
+ final size= MediaQuery.of(context).size;
+ final spaceVer = size.height*0.01;
+
+ final fontSize  = size.height*0.02;
+ return SingleChildScrollView(
+   child: Padding(
+     padding:  EdgeInsets.symmetric(vertical: size.height*0.01,horizontal: size.width *0.01),
+     child: Column(
+
+       children: [
+         /*
+         *  AppLocalizations.of(context).translate('AllEMI')+"(${snapshot.loanData.length.toString()})",
+       AppLocalizations.of(context).translate('PaidEMI')+"(${paidEmi})",
+       AppLocalizations.of(context).translate('RemainingEMI')+"(${remainingEmi})"*/
+         Row(
+           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+           children: [
+             Text(AppLocalizations.of(context).translate('MonthlyEMI'),
+             style: TextStyle(
+               fontWeight: FontWeight.bold,
+               fontSize: fontSize
+             ),
+             ),
+             Flexible(child: Text(
+                 emiAmount.toString(),
+               style: TextStyle(
+                   fontSize: fontSize
+               ),
+             ))
+
+           ],
+         ),
+         Divider(color: CommonAssets.defaultTextColor,),
+         SizedBox(height: spaceVer,),
+         Row(
+           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+           children: [
+             Text(AppLocalizations.of(context).translate('AllEMI')+' '+AppLocalizations.of(context).translate('Amount'),
+             style: TextStyle(
+               fontWeight: FontWeight.bold,
+               fontSize: fontSize
+             ),
+             ),
+             Flexible(child: Text(
+                 (emiAmount*snapshot.loanData.length).toString(),
+               style: TextStyle(
+                   fontSize: fontSize
+               ),
+             ))
+
+           ],
+         ),
+         SizedBox(height: spaceVer,),
+         Row(
+           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+           children: [
+             Text(AppLocalizations.of(context).translate('Paid')+' '+AppLocalizations.of(context).translate('Amount'),
+               style: TextStyle(
+                   fontWeight: FontWeight.bold,
+                   fontSize: fontSize
+               ),
+             ),
+             Flexible(child: Text((emiAmount*paidEmi).toString(),
+               style: TextStyle(
+                   fontSize: fontSize
+               ),))
+
+           ],
+         ),
+         SizedBox(height: spaceVer,),
+      Divider(color: CommonAssets.defaultTextColor,),
+         Row(
+           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+           children: [
+             Text(AppLocalizations.of(context).translate('Remaining')+' '+AppLocalizations.of(context).translate('Amount'),
+               style: TextStyle(
+                   fontWeight: FontWeight.bold,
+                   fontSize: fontSize
+               ),),
+             Flexible(child: Text((emiAmount*remainingEmi).toString(),
+               style: TextStyle(
+                   fontSize: fontSize
+               ),))
+
+           ],
+         ),
+         Divider(color: CommonAssets.defaultTextColor,),
+         SizedBox(height: spaceVer,),
+         Row(
+           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+           children: [
+             Text(AppLocalizations.of(context).translate('Previous')+' '+AppLocalizations.of(context).translate('EMI'),
+               style: TextStyle(
+                   fontWeight: FontWeight.bold,
+                   fontSize: fontSize
+               ),
+             ),
+             Flexible(child: Text(
+               paidEmiData.length>0?paidEmiData.last.installmentDate.toDate().toString().substring(0,10):"",
+               style: TextStyle(
+                   fontSize: fontSize
+               ),
+             ))
+
+           ],
+         ),
+         SizedBox(height: spaceVer,),
+         Row(
+           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+           children: [
+             Text(AppLocalizations.of(context).translate('Next')+' '+AppLocalizations.of(context).translate('EMI'),
+               style: TextStyle(
+                   fontWeight: FontWeight.bold,
+                   fontSize: fontSize
+               ),
+             ),
+             Flexible(child: Text(
+               remainingEmiData.length>0?remainingEmiData.first.installmentDate.toDate().toString().substring(0,10):"",
+               style: TextStyle(
+                   fontSize: fontSize,
+
+               ),))
+
+           ],
+         ),
+         SizedBox(height: spaceVer*4,),
+         RaisedButton.icon(
+           padding: EdgeInsets.symmetric(
+             vertical: size.height*0.01,
+             horizontal: size.width*0.07
+           ),
+           shape: StadiumBorder(),
+           icon: Icon(
+             Icons.picture_as_pdf,color: CommonAssets.buttonTextColor,size: fontSize*2,),
+           label: Text('PDF',style: TextStyle(
+             color: CommonAssets.buttonTextColor,
+             fontSize: fontSize,
+           ),),
+           onPressed: ()async{
+             pdfPath =  await  GeneratePdf().createPdf(statementList,snapshot,projectRetrieve.projectName,projectRetrieve.partOfSociety);
+             setState(() {
+
+             });
+             return   await Navigator.push(
+               context,
+               PageRouteBuilder(
+                 pageBuilder: (_, __, ___) => PdfPreviewScreen(path: pdfPath,),
+                 transitionDuration: Duration(seconds: 0),
+               ),
+             );
+           },
+         )
+       ],
+     ),
+   ),
+ );
+  return RaisedButton(
+    onPressed: ()async{
+      pdfPath =  await  GeneratePdf().createPdf(statementList,snapshot,projectRetrieve.projectName,projectRetrieve.partOfSociety);
+      setState(() {
+
+      });
+      return   await Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___) => PdfPreviewScreen(path: pdfPath,),
+          transitionDuration: Duration(seconds: 0),
+        ),
+      );
+    },
+  );
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+        SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+          rows: [
+            for(int i =0;i<statementList.length;i++)
+
+              DataRow(cells: [
+
+                DataCell( Text(statementList[i].emiNo.toString())),
+                DataCell( Text(statementList[i].emiDate.toDate().toString().substring(0,10))),
+                DataCell( Text(
+                    statementList[i].isPending?"":
+                    statementList[i].paymentDate.toDate().toString().substring(0,10))),
+                DataCell( Text(statementList[i].amount.toString())),
+                DataCell( Text(statementList[i].paidAmount.toString())),
+                DataCell( Text(statementList[i].remainingAmount.toString())),
+                DataCell(
+                  Text(statementList[i].delayDuration.toString()),
+                //     Row(
+                //   children: [
+                //     Text(statementList[i].delayDuration.toString()),
+                //     statementList[i].delayDuration==0?Text(''):Icon(
+                //         statementList[i].delayDuration>=0?Icons.arrow_upward_outlined:Icons.arrow_downward_outlined
+                //     )
+                //   ],
+                // )
+                ),
+
+              ])
+          ],
+          columns: [
+            DataColumn(label: Text(
+                AppLocalizations.of(context).translate('EMINo'),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+            ),),
+            DataColumn(label: Column(
+              children: [
+                Text(
+                    AppLocalizations.of(context).translate('EMI'),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+                ),
+                Text(
+                    AppLocalizations.of(context).translate('Date'),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+                ),
+              ],
+            )),
+            DataColumn(label: Column(
+              children: [
+                Text(
+                    AppLocalizations.of(context).translate('Payment'),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+                ),
+                Text(
+                    AppLocalizations.of(context).translate('Date'),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+                ),
+              ],
+            )),
+            DataColumn(label: Text(
+                AppLocalizations.of(context).translate('MonthlyEMI'),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+            ),),
+            DataColumn(label: Column(
+              children: [
+                Text(
+                    AppLocalizations.of(context).translate('Paid'),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+                ),
+                Text(
+                    AppLocalizations.of(context).translate('Amount'),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+                ),
+              ],
+            )),
+            DataColumn(label: Column(
+              children: [
+                Text(
+                    AppLocalizations.of(context).translate('Remaining'),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+                ),
+                Text(
+                    AppLocalizations.of(context).translate('Amount'),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+                ),
+              ],
+            )),
+            DataColumn(label: Text(
+                AppLocalizations.of(context).translate('Delay'),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+            ),),
+
+
+
+          ],
+        ),
+      ),
+
+        ],
+      ),
+    );
   }
 Widget loanInfo(List<SinglePropertiesLoanInfo> snapshot){
     final size = MediaQuery.of(context).size;

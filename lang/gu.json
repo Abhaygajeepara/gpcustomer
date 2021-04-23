@@ -157,6 +157,7 @@
   "SearchByName": "નામ દ્વારા શોધો",
   "PaidEMI":"ચૂકવેલ ઇ.એમ.આઈ",
   "Ads": "જાહેરાતો",
+  "Payment": "ચુકવણી",
   "IDIsExist": "આઈ.ડી અસ્તિત્વમાં છે",
   "MostVisitedSite": "સૌથી વધુ જોવાયેલી સાઇટ",
   "Thisuserhasnopermissiontologin": "આ વપરાશકર્તાને લોગ ઈન કરવાની પરવાનગી નથી",
@@ -169,5 +170,10 @@
   "EnterMobileNumberRegisteredByAdmin": "એડમિન દ્વારા નોંધાયેલ મોબાઇલ નંબર દાખલ કરો",
   "Vrajraj": "વ્રજરાજ",
   "Corporation": "કોર્પોરેશન",
-  "AllEMI": "બધા ઇ.એમ.આઈ"
+  "AllEMI": "બધા ઇ.એમ.આઈ",
+  "EMINo": "ઇ.એમ.આઈ નંબર",
+  "Delay": "વિલંબ",
+  "Next": "આગળનો",
+  "Previous": "પાછલો",
+  "SwipeToChangeRulesLanguage": "નિયમોની ભાષા બદલવા માટે સ્વાઇપ કરો"
 }

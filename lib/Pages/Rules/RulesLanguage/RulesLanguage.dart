@@ -39,50 +39,43 @@ class _RulesLanguageState extends State<RulesLanguage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final indexFontSize = size.height *0.02;
-    return Column(
-      children: [
-    Expanded(
-      child: ListView.builder(
-      itemCount: widget.rulesdata.length,
-          itemBuilder: (context,index){
-int rulesNumber =index+1;
-            return Padding(
-              padding:  EdgeInsets.symmetric(vertical: size.height*0.005),
-              child: Row(
-mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    final indexFontSize = size.height *0.023;
+    return ListView.builder(
+        itemCount: widget.rulesdata.length,
+        itemBuilder: (context,index){
+          int rulesNumber =index+1;
+          return Padding(
+            padding:  EdgeInsets.symmetric(vertical: size.height*0.005),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
 
-                  children: [
-                    Text(
+              children: [
+                Text(
 
-                      rulesNumber.toString(),
+                  rulesNumber.toString(),
 
-                      style: TextStyle(
+                  style: TextStyle(
 
-                        fontSize:indexFontSize,
-                        fontWeight: FontWeight.bold
-                      ),
+                      fontSize:indexFontSize,
+                      fontWeight: FontWeight.bold
+                  ),
 
-                    ),
-                    SizedBox(width: size.width*0.02,),
-                    Flexible(
-                      child: Text(
-                        widget.rulesdata[index].substring(0,1).toUpperCase()+widget.rulesdata[index].substring(1)+"this is additional text which can be remove after testing fuck you monster",
-
-                        style: TextStyle(
-                            fontSize: size.height *0.02
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
-            );
-          }),
-    ),
+                SizedBox(width: size.width*0.02,),
+                Flexible(
+                  child: Text(
+                    widget.rulesdata[index].substring(0,1).toUpperCase()+widget.rulesdata[index].substring(1),
 
-      ],
-    );
+                    style: TextStyle(
+                        fontSize: size.height *0.02
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
 
   }
 }

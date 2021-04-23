@@ -27,7 +27,7 @@ class _ImageZoomState extends State<ImageZoom> {
     return Scaffold(
       appBar: CommonappBar(
       CommonAssets.apptitle
-      ,Container()),
+      ,Container(),context),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [

@@ -5,6 +5,7 @@ class CommonAssets{
    //static Color AppbarColor =   Color(0xff73c5bc);
 static Color defaultTextColor =   Colors.black;
   static Color AppbarTextColor = Colors.grey;
+static Color splashTextColor = Colors.black54;
   static Color buttonTextColor = Colors.white;
   static Color appBarDrawerColor = Colors.red;
   static Color activeLanguageColor = Colors.red;
@@ -33,7 +34,7 @@ static Color defaultTextColor =   Colors.black;
   //server error
   static String snapshoterror = 'Server Error';
   static Color soldProduct =Colors.white;
-   static Color paidEmiCardColor = Colors.grey;
+   static Color paidEmiCardColor = Colors.grey.shade300;
   static Color editIconColor = Colors.black;
 
 

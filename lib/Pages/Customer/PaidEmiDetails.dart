@@ -21,7 +21,7 @@ class _PaidEmiDetailsState extends State<PaidEmiDetails> {
     return Scaffold(
       appBar: CommonappBar(
           widget.singlePropertiesLoanInfo.loadId,
-          Container()),
+          Container(),context),
       body: SingleChildScrollView(
         child: Padding(
           padding:  EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.width*0.02),

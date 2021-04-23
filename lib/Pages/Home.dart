@@ -215,7 +215,7 @@ class _HomeState extends State<Home> {
          // btnCancelOnPress: () {},
          // btnOkOnPress: () {},
        )..show();
-         })
+         }),context
       ),
       body: loading ?CircularLoading(): SingleChildScrollView(
         child: StreamBuilder<CustomerAndAdvertise>(
@@ -317,12 +317,12 @@ class _HomeState extends State<Home> {
                          Divider(color: CommonAssets.AppbarTextColor,thickness: 2,),
 
                           propertiesShow(projectNameSnapshot.data.ownProperties,true,size),
-                          SizedBox(height: size.height * 0.01,),
+
                          // Divider(color: CommonAssets.AppbarTextColor,thickness: 2,),
-                          SizedBox(height: size.height * 0.01,),
+
 
                           projectNameSnapshot.data.soldProperties.length <= 0?Container(): propertiesShow(projectNameSnapshot.data.soldProperties,false,size),
-                          SizedBox(height: size.height * 0.01,),
+
 
                           //  Expanded(child: redirect(snapshot.data,_projectRetrieve,size))
 
@@ -390,11 +390,14 @@ Widget propertiesShow(List<ProjectNameList> projectDataList,bool isOwn,Size size
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-            title,
-          style: TextStyle(
-            fontSize: titleSize,
-            fontWeight: FontWeight.bold
+        Padding(
+          padding:  EdgeInsets.symmetric(horizontal: size.height*0.01,vertical: size.height*0.01),
+          child: Text(
+              title,
+            style: TextStyle(
+              fontSize: titleSize,
+              fontWeight: FontWeight.bold
+            ),
           ),
         ),
         SizedBox(height: size.height*0.02,),

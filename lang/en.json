@@ -175,5 +175,10 @@
   "EnterMobileNumberRegisteredByAdmin": "Enter Mobile Number Registered By Admin",
   "Vrajraj": "Vrajraj",
   "Corporation": "Corporation",
-  "AllEMI": "All EMI"
+  "AllEMI": "All EMI",
+  "EMINo": "EMI No",
+  "Delay": "Delay",
+  "Next": "Next",
+  "Previous": "Previous",
+  "SwipeToChangeRulesLanguage": "Swipe To Change Rules Language"
 }

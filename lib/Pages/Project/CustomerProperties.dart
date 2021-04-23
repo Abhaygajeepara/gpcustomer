@@ -53,7 +53,7 @@ class _CustomerPropertiesState extends State<CustomerProperties> {
     return Scaffold(
       appBar: CommonappBar(
           _projectRetrieve.projectName,
-          Container()),
+          Container(),context),
       body: GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2),
