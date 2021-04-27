@@ -18,6 +18,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:gpgroup/Model/Users/BrokerData.dart';
 import 'package:gpgroup/Model/Users/CustomerModel.dart';
 import 'package:gpgroup/Pages/Customer/ExistingCustomerData.dart';
+import 'package:gpgroup/Pages/Customer/RemainingEMIDetails.dart';
 import 'package:gpgroup/Pages/Customer/ZoomImage.dart';
 import 'package:gpgroup/Pages/Project/ProjectInfo.dart';
 import 'package:gpgroup/Pages/Setting/Lang/Lang.dart';
@@ -261,7 +262,7 @@ class _HomeState extends State<Home> {
                               itemBuilder: (BuildContext context, index) {
                                 return snapshot.data.advertiseList.length <= 0 ?
                                 Image.asset(
-                                    'assets/defaultads.png'
+                                    'assets/default.jpg'
 
 
                                 )
@@ -315,7 +316,7 @@ class _HomeState extends State<Home> {
                           SizedBox(height: size.height * 0.01,),
 
                          Divider(color: CommonAssets.AppbarTextColor,thickness: 2,),
-
+                          remainingEmi(snapshot.data.customerInfoModel),
                           propertiesShow(projectNameSnapshot.data.ownProperties,true,size),
 
                          // Divider(color: CommonAssets.AppbarTextColor,thickness: 2,),
@@ -377,7 +378,48 @@ class _HomeState extends State<Home> {
 //        return properties(dataList,_projectRetrieve);
 //     }
 // }
+Widget remainingEmi( CustomerInfoModel customerInfoModel){
+   final size = MediaQuery.of(context).size;
+    final fontSize = size.height*0.02;
+    return customerInfoModel.remainingEMIList.length <=0?Container():GestureDetector(
+      onTap: (){
+        return Navigator.push(context, PageRouteBuilder(pageBuilder:(_,__,___)=>
+            RemainingEMIDetails(
+              customerInfoModel: customerInfoModel,
+            )));
+      },
+      child: Card(
+      elevation: 20,
+        margin: EdgeInsets.symmetric(vertical: size.height*0.02,horizontal: size.width*0.04),
+        child: Padding(
 
+          padding: EdgeInsets.symmetric(vertical: size.height*0.02,horizontal: size.width*0.02),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+            children: [
+              Flexible(
+                  child: Text(
+                      AppLocalizations.of(context).translate('Total')+" "+AppLocalizations.of(context).translate('RemainingEMI'),
+                    style: TextStyle(
+                      color: CommonAssets.totalRemainingEmiColor,
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.bold
+                    ),
+                  )
+              ),
+              Text(customerInfoModel.totalRemainingEMIs.toString(),
+                style: TextStyle(
+                    color: CommonAssets.totalRemainingEmiColor,
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.bold
+              ),)
+            ],
+          ),
+        ),
+      ),
+    );
+}
 Widget propertiesShow(List<ProjectNameList> projectDataList,bool isOwn,Size size,){
     final titleSize = size.height*0.02;
     String title = isOwn? AppLocalizations.of(context).translate('OwnProperty')
@@ -493,11 +535,10 @@ Widget propertiesShow(List<ProjectNameList> projectDataList,bool isOwn,Size size
               onTap: ()async{
                 await _projectRetrieve.setProjectName(customerProperties[index]['ProjectName'],'');
                 await _projectRetrieve.setLoanRef(customerProperties[index]['LoanRef']);
-                await _projectRetrieve.setPartOfSociety(customerProperties[index]['Part'],customerProperties[index]['PropertyNumber']);
+              //  await _projectRetrieve.setPartOfSociety(customerProperties[index]['Part'],customerProperties[index]['PropertyNumber']);
                 print(_projectRetrieve.projectName);
                 print(_projectRetrieve.loadId);
-                print(_projectRetrieve.partOfSociety);
-                print(_projectRetrieve.propertiesNumber);
+
                 Navigator.push(context, PageRouteBuilder(
                   //    pageBuilder: (_,__,____) => BuildingStructure(),
                   pageBuilder: (_,__,___)=> LoanInfo(),

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:gpgroup/Commonassets/Commonassets.dart';
 import 'package:gpgroup/Pages/Home.dart';
 import 'package:gpgroup/Wrapper.dart';
 
@@ -25,34 +24,11 @@ class _SplashPageState extends State<SplashPage> {
       });
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return isHome?Wrapper(): Scaffold(
-      //assets/vrajraj.png
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              CommonAssets.apptitle,
-            style: TextStyle(
-              fontSize: size.height*0.05,
-              fontWeight: FontWeight.bold,
-              color: CommonAssets.splashTextColor
-            ),
-            ),
-            SizedBox(height: size.height*0.02,),
-            Image.asset(
-                'assets/splashImage.png',
-              width: size.width*0.8,
-               fit: BoxFit.fitWidth,
-            )
-          ],
-        ),
-      ),
+      body: Center(child: Image.asset('assets/vrajraj.png')),
     );
   }
 }

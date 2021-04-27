@@ -23,6 +23,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:gpgroup/Service/ProjectRetrieve.dart';
 import 'package:gpgroup/app_localization/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 class LoanInfo extends StatefulWidget {
  
   @override
@@ -101,6 +102,7 @@ bool loading = false;
           builder: (context,snapshot){
             if(snapshot.hasData)
               {
+                //  projectRetrieve.setPartOfSociety(snapshot.data.bookingData.part,snapshot.data.bookingData.propertiesNumber);
                 calculation(snapshot.data.loanData,snapshot.data.bookingData);
                    return !emiPage? propertiesInfo(snapshot.data):emiType(snapshot.data);
 
@@ -109,8 +111,8 @@ bool loading = false;
               return Container(
                 child: Center(
                   child: Text(
-                  //snapshot.error.toString(),
-                   CommonAssets.snapshoterror,
+                  snapshot.error.toString(),
+                  // CommonAssets.snapshoterror,
                     style: TextStyle(
                         color: CommonAssets.errorColor
                     ),
@@ -206,11 +208,11 @@ bool loading = false;
   Widget loanRedirectionWidget(BookingAndLoan snapshot){
     print(pageIndex);
     if(pageIndex==1){
-
+// paid  emi
      return loanInfo(paidEmiData);
     }
     else if(pageIndex == 2){
-
+// remaining emi
       return loanInfo(remainingEmiData);
     }
     else  {
@@ -362,10 +364,33 @@ bool loading = false;
              fontSize: fontSize,
            ),),
            onPressed: ()async{
-             pdfPath =  await  GeneratePdf().createPdf(statementList,snapshot,projectRetrieve.projectName,projectRetrieve.partOfSociety);
+             pdfPath =  await  GeneratePdf().createPdf(statementList,snapshot,projectRetrieve.projectName);
              setState(() {
 
              });
+             // showDialog(
+             //   context: context,
+             // builder: (context){
+             //     return Container(
+             //       child: Row(
+             //       children: [
+             //       IconButton(icon: Icon(Icons.picture_as_pdf_outlined),onPressed: (){
+             //         return    Navigator.push(
+             //           context,
+             //           PageRouteBuilder(
+             //             pageBuilder: (_, __, ___) => PdfPreviewScreen(path: pdfPath,),
+             //             transitionDuration: Duration(seconds: 0),
+             //           ),
+             //         );
+             //       },),
+             //         IconButton(icon: Icon(Icons.picture_as_pdf_outlined),onPressed: (){
+             //           return   Share.shareFiles(['$pdfPath'], text: 'Properties Statement');
+             //         },)
+             //       ],
+             //       ),
+             //     );
+             // }
+             // );
              return   await Navigator.push(
                context,
                PageRouteBuilder(
@@ -379,21 +404,21 @@ bool loading = false;
      ),
    ),
  );
-  return RaisedButton(
-    onPressed: ()async{
-      pdfPath =  await  GeneratePdf().createPdf(statementList,snapshot,projectRetrieve.projectName,projectRetrieve.partOfSociety);
-      setState(() {
-
-      });
-      return   await Navigator.push(
-        context,
-        PageRouteBuilder(
-          pageBuilder: (_, __, ___) => PdfPreviewScreen(path: pdfPath,),
-          transitionDuration: Duration(seconds: 0),
-        ),
-      );
-    },
-  );
+  // return RaisedButton(
+  //   onPressed: ()async{
+  //     pdfPath =  await  GeneratePdf().createPdf(statementList,snapshot,projectRetrieve.projectName,projectRetrieve.partOfSociety);
+  //     setState(() {
+  //
+  //     });
+  //     return   await Navigator.push(
+  //       context,
+  //       PageRouteBuilder(
+  //         pageBuilder: (_, __, ___) => PdfPreviewScreen(path: pdfPath,),
+  //         transitionDuration: Duration(seconds: 0),
+  //       ),
+  //     );
+  //   },
+  // );
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -501,15 +526,22 @@ bool loading = false;
   }
 Widget loanInfo(List<SinglePropertiesLoanInfo> snapshot){
     final size = MediaQuery.of(context).size;
+
+    Timestamp nowStamp = Timestamp.now();
     return Container(
     //  height: size.height *0.8,
       child: ListView.builder(
           itemCount: snapshot.length,
           itemBuilder: (context,emiIndex){
+            final lateEmiIndex = nowStamp.compareTo(snapshot[emiIndex].installmentDate);
+            print('asd${lateEmiIndex}');
+            // if lateEmiIndex is -1 then emi is late
+
+          Color borderColor =!snapshot[emiIndex].emiPending? CommonAssets.boxBorderColors:lateEmiIndex==1?CommonAssets.remainingEmiBoxBorderColors:CommonAssets.boxBorderColors;
             return Card(
               shape: RoundedRectangleBorder(
                   side: BorderSide(
-                      color: CommonAssets.boxBorderColors
+                      color: borderColor
                   )
               ),
               color: snapshot[emiIndex].emiPending ? CommonAssets.paidEmiCardColor:Colors.white,
@@ -544,6 +576,7 @@ Widget loanInfo(List<SinglePropertiesLoanInfo> snapshot){
    final  verticalSizeBox = size.height *0.05;
    final  expanedTileSpace =size.height *0.012;
    final fontSize = size.height *0.02;
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -551,7 +584,7 @@ Widget loanInfo(List<SinglePropertiesLoanInfo> snapshot){
           children: [
             Center(
                 child: Text(
-                  snapshot.bookingData.id.toString(),
+                  snapshot.bookingData.propertiesNumber.toString(),
                   style: TextStyle(
                       fontSize: mainTitileSize,
                       fontWeight: fontWeight
@@ -560,72 +593,7 @@ Widget loanInfo(List<SinglePropertiesLoanInfo> snapshot){
             ),
             Divider(color: Theme.of(context).dividerColor,thickness:2 ,),
             // customer information
-            ExpansionTile(
-              //childrenPadding: EdgeInsets.all(8),
-              //childrenPadding: EdgeInsets.all(8),
-              title: Text(
-                AppLocalizations.of(context).translate('CustomerInformation'),
-                style: TextStyle(
-                    fontSize: titileSize,
-                    fontWeight: fontWeight
-                ),
-              ),
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      AppLocalizations.of(context).translate('CustomerName'),
-                      style: TextStyle(
-                          fontSize: titileSize,
-                          fontWeight: fontWeight
-                      ),
-                    ),
-                    SizedBox(width: size.width *0.01,),
-                    Container(
-                      alignment: Alignment.centerRight,
-                      width: size.width *0.65,
-                      child: new SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,//.horizontal
-                        child: new Text(
-                          snapshot.bookingData.customerName,
-                          textAlign: TextAlign.center,
-                          style: new TextStyle(
-                            fontSize: titileSize,
 
-                          ),
-                        ),
-                      ),
-                    ),
-
-
-                  ],
-                ), SizedBox(height: expanedTileSpace,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      AppLocalizations.of(context).translate('CustomerId'),
-                      style: TextStyle(
-                          fontSize: titileSize,
-                          fontWeight: fontWeight
-                      ),
-                    ),
-                    AutoSizeText(
-
-                      snapshot.bookingData.customerId,
-
-                      style: TextStyle(
-                        fontSize: normatTextSize,
-
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(height: expanedTileSpace,),
-              ],
-            ),
-            // SizedBox(height: verticalSizeBox,),
             ExpansionTile(
               childrenPadding: EdgeInsets.all(8),
               title: Text(

@@ -19,8 +19,8 @@ class ProjectRetrieve{
   String loadId;
   String projectName;
   String typeOfProject;
- String partOfSociety;
- String propertiesNumber;
+ // String partOfSociety;
+ // String propertiesNumber;
 // String typeOfProject;
 
  setProjectName(String val,String projectType){
@@ -32,10 +32,10 @@ class ProjectRetrieve{
  //
  //   this.loanRef = loanrefs;
  // }
- setPartOfSociety(String part,String propertyId){
-   this.partOfSociety = part;
-   this.propertiesNumber =propertyId;
- }
+ // setPartOfSociety(String part,String propertyId){
+ //   this.partOfSociety = part;
+ //   this.propertiesNumber =propertyId;
+ // }
   setCustomer(String id,){
     this.customerId = id;
 
@@ -48,6 +48,7 @@ class ProjectRetrieve{
   }
 
   final CollectionReference _projectReference = FirebaseFirestore.instance.collection("Project");
+  final CollectionReference _loanReference = FirebaseFirestore.instance.collection("Loan");
   final CollectionReference brokerReference = FirebaseFirestore.instance.collection('Broker');
   final CollectionReference infoReference = FirebaseFirestore.instance.collection('Info');
   final CollectionReference customerReference = FirebaseFirestore.instance.collection('Customer');
@@ -102,10 +103,10 @@ class ProjectRetrieve{
     return infoReference.doc('CustomerApp').snapshots().map(appVersion);
   }
  Stream<BookingDataModel> get CUSTOMERSINGLEPROPETIES{
-   return _projectReference.doc(projectName).collection(partOfSociety).doc(propertiesNumber).snapshots().map(_bookingDataModel);
+   return _loanReference.doc(projectName).collection(loadId).doc('BasicDetails').snapshots().map(_bookingDataModel);
  }
  BookingDataModel _bookingDataModel(DocumentSnapshot snapshot){
-   return  BookingDataModel.of(snapshot);
+   return  BookingDataModel.of(snapshot,loadId);
  }
  Stream<BookingAndLoan> BOOKINGANDLOAN(){
    return Rx.combineLatest2(CUSTOMERSINGLEPROPETIES, LOANINFO, (BookingDataModel bookingDataModel, List<SinglePropertiesLoanInfo> loanData) {

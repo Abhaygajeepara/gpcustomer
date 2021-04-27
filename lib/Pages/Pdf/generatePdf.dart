@@ -8,12 +8,13 @@ import 'package:gpgroup/Model/Users/CustomerModel.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class GeneratePdf{
-  Future createPdf(List<StatementModel> statementList,BookingAndLoan customerData,String projectName,String part)async{
+  Future createPdf(List<StatementModel> statementList,BookingAndLoan customerData,String projectName)async{
     // final projectRetrieve = Provider.of<ProjectRetrieve>(context);
     Timestamp now = Timestamp.now();
-    String pdfName = "${customerData.bookingData.id}+${now.toDate().toString().substring(0,16)}";
+    String pdfName = "${customerData.bookingData.propertiesNumber}+${now.toDate().toString().substring(0,16)}";
     final pdf = pw.Document();
     pdf.addPage(
 
@@ -31,7 +32,7 @@ class GeneratePdf{
                   )
                   )
               ),
-              details(customerData, projectName, part),
+              details(customerData, projectName),
               pw.SizedBox(height: 20),
               pw.Text(
                   'Loan Statement',
@@ -46,6 +47,8 @@ class GeneratePdf{
         )
     );
     //  final dir = await getApplicationDocumentsDirectory();
+    final storageRequest = await Permission.storage.request();
+    if(storageRequest.isGranted){
     final path= Directory("storage/emulated/0/Download/GPGroup/Statement");
     if ((!await path.exists())){
       path.create();
@@ -57,10 +60,13 @@ class GeneratePdf{
 
     return file.path;
 
+  }else{
+      openAppSettings();
+    }
   }
 
 
-  static  Widget details(BookingAndLoan customerDate,String projectName,String part){
+  static  Widget details(BookingAndLoan customerDate,String projectName){
     double spaceVer = 5;
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -79,6 +85,14 @@ class GeneratePdf{
             pw.Expanded(
               child: pw.Text(
                   'Part/Floor',
+                  style: TextStyle(
+                      fontWeight: pw.FontWeight.bold
+                  )
+              ),
+            ),
+            pw.Expanded(
+              child: pw.Text(
+                  'PropertyNumber',
                   style: TextStyle(
                       fontWeight: pw.FontWeight.bold
                   )
@@ -105,7 +119,12 @@ class GeneratePdf{
               ),
               pw.Expanded(
                 child: pw.Text(
-                    part
+                    customerDate.bookingData.part
+                ),
+              ),
+              pw.Expanded(
+                child: pw.Text(
+                  customerDate.bookingData.propertiesNumber
                 ),
               ),
               pw.Expanded(

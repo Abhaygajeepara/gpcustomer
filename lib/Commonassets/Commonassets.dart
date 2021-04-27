@@ -24,6 +24,7 @@ static Color splashTextColor = Colors.black54;
 
   static Color errorColor = Colors.red;
   static Color boxBorderColors= Colors.black;
+    static Color remainingEmiBoxBorderColors= Colors.red;
   static Color selectedBorderColors= Colors.white;
   static Color unselectedBorderColors= Colors.black;
   static Color iconcolor = Colors.white;
@@ -36,6 +37,7 @@ static Color splashTextColor = Colors.black54;
   static Color soldProduct =Colors.white;
    static Color paidEmiCardColor = Colors.grey.shade300;
   static Color editIconColor = Colors.black;
+  static Color totalRemainingEmiColor = Colors.red;
 
 
 }

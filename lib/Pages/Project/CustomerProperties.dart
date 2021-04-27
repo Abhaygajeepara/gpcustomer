@@ -59,11 +59,21 @@ class _CustomerPropertiesState extends State<CustomerProperties> {
               crossAxisCount: 2),
           itemCount:widget.customerProperties.length,
           itemBuilder: (context,index){
+            String loanref =widget.customerProperties[index]['LoanRef'];
 
+
+
+//Remove everything after last '.'
+            var  propertiesPosition = loanref.lastIndexOf('-');
+            String propertiesNumber = loanref.substring(  propertiesPosition+1);
+            var partPosition= loanref.lastIndexOf('-',propertiesPosition-1);
+
+            String part =  loanref.substring( partPosition+1,propertiesPosition);
+            print(part);
             return GestureDetector(
              onTap: ()async{
                await _projectRetrieve.setLoanRef(widget.customerProperties[index]['LoanRef']);
-               await _projectRetrieve.setPartOfSociety(widget.customerProperties[index]['Part'],widget.customerProperties[index]['PropertyNumber']);
+               // await _projectRetrieve.setPartOfSociety(widget.customerProperties[index]['Part'],widget.customerProperties[index]['PropertyNumber']);
                Navigator.push(context, PageRouteBuilder(
                  pageBuilder: (_,__,___)=> LoanInfo(),
                  transitionDuration: Duration(milliseconds: 0),
@@ -79,13 +89,13 @@ class _CustomerPropertiesState extends State<CustomerProperties> {
                   children: [
                     Expanded(child: Image.asset(image)),
                     Text(
-                        widget.customerProperties[index]['Part'],
+                        part,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize:partFontSize
                     ),
                     ),
-                     Text(widget.customerProperties[index]['PropertyNumber'],
+                     Text(propertiesNumber,
                      style: TextStyle(
                        fontSize: propertiesFontSize,
                      ),

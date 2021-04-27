@@ -245,6 +245,9 @@ class _MyAppState extends State<MyApp> {
 
 
                 }
+                // else {
+                //   openAppSettings();
+                // }
 
               },
             ),
