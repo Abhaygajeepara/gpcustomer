@@ -20,7 +20,7 @@ static Color splashTextColor = Colors.black54;
   static Color circularLoading = Colors.blue;
   static Color circularLoadingbackgroud = Colors.black;
 
-  static Color dividercolor = Colors.black;
+  static Color dividercolor = Colors.grey;
 
   static Color errorColor = Colors.red;
   static Color boxBorderColors= Colors.black;

@@ -18,9 +18,9 @@ class AdvertiseModel {
   {
     return AdvertiseModel(
         id: snapshot.id,
-        description: snapshot.data()['Description'],
-        imageUrl: List.from(snapshot.data()['ImageUrl']),
-      isActive: snapshot.data()['IsActive']
+        description: snapshot['Description'],
+        imageUrl: List.from(snapshot['ImageUrl']),
+      isActive: snapshot['IsActive']
         );
   }
 }

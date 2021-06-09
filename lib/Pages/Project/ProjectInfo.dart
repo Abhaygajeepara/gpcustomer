@@ -81,7 +81,9 @@ class _ProjectDataState extends State<ProjectData> {
                       scrollDirection: Axis.horizontal,
                     ),
                     itemCount: widget.projectNameList.imagesUrl.length,
-                    itemBuilder: (BuildContext context,index){
+
+                    itemBuilder: (ctx, index  , realIdx){
+
                       return GestureDetector(
                         onTap: (){
                           Navigator.push(context, PageRouteBuilder(

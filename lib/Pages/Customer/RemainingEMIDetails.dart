@@ -35,8 +35,13 @@ class _RemainingEMIDetailsState extends State<RemainingEMIDetails> {
                   padding: EdgeInsets.symmetric(vertical: size.height*0.005,horizontal: size.width*0.01),
                   child: ListTile(
                     onTap: ()async{
-                      await _projectRetrieve.setProjectName(widget.customerInfoModel.remainingEMIList[index].projectName, '');
+                      String _projectName = widget.customerInfoModel.remainingEMIList[index].projectName;
+                      var  propertiesPosition = _projectName.indexOf('/');
+                      String setProjectName = _projectName.substring(0,propertiesPosition);
+                      await _projectRetrieve.setProjectName(setProjectName, '');
                       await _projectRetrieve.setLoanRef(widget.customerInfoModel.remainingEMIList[index].loanRef);
+                      print(setProjectName);
+                      print(_projectRetrieve.loadId);
                     //  await _projectRetrieve.setPartOfSociety(widget.customerProperties[index]['Part'],widget.customerProperties[index]['PropertyNumber']);
                       Navigator.push(context, PageRouteBuilder(
                         pageBuilder: (_,__,___)=> LoanInfo(),

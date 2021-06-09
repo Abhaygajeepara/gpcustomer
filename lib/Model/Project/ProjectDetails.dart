@@ -39,18 +39,18 @@ int siteVisit;
   factory ProjectNameList.of(DocumentSnapshot snapshot){
     return ProjectNameList(
       projectName: snapshot.id,
-      address: snapshot.data()['Address'],
-      landmark: snapshot.data()['Landmark'],
-      description: snapshot.data()['Description'],
-      typeofBuilding: snapshot.data()['TypeofBuilding'],
-      englishRules:List.from( snapshot.data()['EnglishRules']),
-      gujaratiRules: List.from( snapshot.data()['GujaratiRules']),
-      hindiRules: List.from( snapshot.data()['HindiRules']),
-      reference: List.from( snapshot.data()['Reference']),
-      Structure: List.from(snapshot.data()['Structure']),
-      imagesUrl : List.from(snapshot.data()['ImageUrl']),
-      isSiteOn: snapshot.data()['IsSiteOn'],
-      siteVisit: snapshot.data()['SiteVisit']
+      address: snapshot['Address'],
+      landmark: snapshot['Landmark'],
+      description: snapshot['Description'],
+      typeofBuilding: snapshot['TypeofBuilding'],
+      englishRules:List.from( snapshot['EnglishRules']),
+      gujaratiRules: List.from( snapshot['GujaratiRules']),
+      hindiRules: List.from( snapshot['HindiRules']),
+      reference: List.from( snapshot['Reference']),
+      Structure: List.from(snapshot['Structure']),
+      imagesUrl : List.from(snapshot['ImageUrl']),
+      isSiteOn: snapshot['IsSiteOn'],
+      siteVisit: snapshot['SiteVisit']
 
 
     );

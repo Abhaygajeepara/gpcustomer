@@ -21,6 +21,7 @@ import 'package:gpgroup/Pages/Customer/ExistingCustomerData.dart';
 import 'package:gpgroup/Pages/Customer/RemainingEMIDetails.dart';
 import 'package:gpgroup/Pages/Customer/ZoomImage.dart';
 import 'package:gpgroup/Pages/Project/ProjectInfo.dart';
+import 'package:gpgroup/Pages/Setting/Ads/SingleAds.dart';
 import 'package:gpgroup/Pages/Setting/Lang/Lang.dart';
 import 'package:gpgroup/Service/Auth/LoginAuto.dart';
 import 'package:gpgroup/Service/ProjectRetrieve.dart';
@@ -36,8 +37,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   Future<SharedPreferences> preferences = SharedPreferences.getInstance();
+  PageController pageController = PageController();
   String customerId;
   String token ;
   bool loading = true;
@@ -65,30 +67,49 @@ class _HomeState extends State<Home> {
     super.initState();
     prfs();
      currentMonth  ="${now.month}-${now.year}";
+    notification();
+    // _firebaseMessaging.configure(
+    //   onMessage: (Map<String, dynamic> message) async {
+    //     print("onMessage: $message");
+    //     final notification = message['notification'];
+    //
+    //   },
+    //   onLaunch: (Map<String, dynamic> message) async {
+    //     print("onLaunch: $message");
+    //
+    //     final notification = message['data'];
+    //
+    //   },
+    //   // onBackgroundMessage: (Map<String, dynamic> message) async {
+    //   //   await Firebase.initializeApp();
+    //   //   await FirebaseFirestore.instance.collection("jaydip").doc("d").set({"jaydip":"dip"});
+    //   // },
+    //   onResume: (Map<String, dynamic> message) async {
+    //     print("onResume: $message");
+    //   },
+    // );
+    // _firebaseMessaging.requestNotificationPermissions(
+    //     const IosNotificationSettings(sound: true, badge: true, alert: true));
 
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-        final notification = message['notification'];
-
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-
-        final notification = message['data'];
-
-      },
-      // onBackgroundMessage: (Map<String, dynamic> message) async {
-      //   await Firebase.initializeApp();
-      //   await FirebaseFirestore.instance.collection("jaydip").doc("d").set({"jaydip":"dip"});
-      // },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-      },
+  }
+  Future notification()async{
+    NotificationSettings settings = await _firebaseMessaging.requestPermission(
+      alert: true,
+      badge: true,
+      provisional: false,
+      sound: true,
     );
-    _firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(sound: true, badge: true, alert: true));
 
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+      // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+      // TODO: handle the received notifications
+    } else {
+      print('User declined or has not accepted permission');
+    }
+  }
+  Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    print("Handling a background message: ${message.messageId}");
   }
   Future prfs()async {
   token =await _firebaseMessaging.getToken();
@@ -241,81 +262,95 @@ class _HomeState extends State<Home> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CarouselSlider.builder(
-                              options: CarouselOptions(
+                            itemCount:   snapshot.data.advertiseList.length,
+                            options: CarouselOptions(
 
-                                // height: 400,
-                                aspectRatio: 16 / 9,
-                                viewportFraction: 0.8,
-                                initialPage: 0,
-                                enableInfiniteScroll: true,
-                                reverse: false,
-                                autoPlay: true,
-                                autoPlayInterval: Duration(seconds: 3),
-                                autoPlayAnimationDuration: Duration(
-                                    milliseconds: 800),
-                                autoPlayCurve: Curves.fastOutSlowIn,
-                                enlargeCenterPage: true,
+                            // height: 400,
+                            aspectRatio: 16 / 9,
+                            viewportFraction: 0.8,
+                            initialPage: 0,
+                            enableInfiniteScroll: true,
+                            reverse: false,
+                            autoPlay: true,
+                            autoPlayInterval: Duration(seconds: 3),
+                            autoPlayAnimationDuration: Duration(
+                                milliseconds: 800),
+                            autoPlayCurve: Curves.fastOutSlowIn,
+                            enlargeCenterPage: true,
 
-                                scrollDirection: Axis.horizontal,
-                              ),
-                              itemCount: snapshot.data.advertiseList.length,
-                              itemBuilder: (BuildContext context, index) {
-                                return snapshot.data.advertiseList.length <= 0 ?
-                                Image.asset(
-                                    'assets/default.jpg'
-
-
-                                )
-                                    : GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(context, PageRouteBuilder(
-                                      //    pageBuilder: (_,__,____) => BuildingStructure(),
-                                      pageBuilder: (_, __, ___) => ImageZoom(
-                                          image: snapshot.data
-                                              .advertiseList[index].imageUrl),
-                                      transitionDuration: Duration(
-                                          milliseconds: 0),
-                                    ));
-                                  },
-                                  child: Card(
-                                    child:
-                                    Column(
-                                      children: [
-                                        Expanded(
-                                          child: CachedNetworkImage(
-                                            imageUrl:  snapshot.data.advertiseList[index]
-                                                .imageUrl.first,
-                                            placeholder: (context, url) => Center(child: CircularLoading(),),
-                                            errorWidget: (context, url, error) => Icon(Icons.error),
-                                          ),
-                                          // Image.network(
-                                          //   snapshot.data.advertiseList[index]
-                                          //       .imageUrl.first,
-                                          //   width: size.width,
-                                          //   height: size.height * 0.3,
-                                          //   fit: BoxFit.fill,
-                                          //
-                                          //
-                                          // ),
-                                        ),
-                                        AutoSizeText(
-                                          snapshot.data.advertiseList[index]
-                                              .description,
-                                          maxLines: 1,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: size.width * 0.05
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }
+                            scrollDirection: Axis.horizontal,
                           ),
+                            itemBuilder: (ctx, index, realIdx) {
+                              return snapshot.data.advertiseList.length <= 0 ?Image.asset(
+                    'assets/default.jpg',
+
+                    )
+                        : GestureDetector(
+                                              onTap: () async {
+                                                _projectRetrieve.setAds(snapshot
+                                                    .data
+                                                    .advertiseList[index]
+                                                    .id);
+                                                Navigator.push(context,
+                                                    PageRouteBuilder(
+                                                    pageBuilder:(_, __, ___) =>SingleAds(),transitionDuration:Duration(milliseconds: 0),
+                                                    ));
+                                              },
+                                              child: Column(
+                                                children: [
+                                                  Expanded(
+                                                    child: CachedNetworkImage(
+                                                      imageUrl: snapshot
+                                                          .data
+                                                          .advertiseList[index]
+                                                          .imageUrl
+                                                          .first,
+                                                      fit: BoxFit.cover,
+                                                      width: size.width * 0.8,
+                                                      placeholder:
+                                                          (context, url) =>
+                                                              Center(
+                                                        child:
+                                                            CircularLoading(),
+                                                      ),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          Icon(Icons.error),
+                                                    ),
+                                                    // Image.network(
+                                                    //   snapshot.data.advertiseList[index]
+                                                    //       .imageUrl.first,
+                                                    //   width: size.width,
+                                                    //   height: size.height * 0.3,
+                                                    //   fit: BoxFit.fill,
+                                                    //
+                                                    //
+                                                    // ),
+                                                  ),
+                                                  AutoSizeText(
+                                                    snapshot
+                                                        .data
+                                                        .advertiseList[index]
+                                                        .description,
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize:
+                                                            size.width * 0.05),
+                                                    textAlign: TextAlign.center,
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                    },
+                          ),
+
+
+
                           SizedBox(height: size.height * 0.01,),
 
-                         Divider(color: CommonAssets.AppbarTextColor,thickness: 2,),
+                         Divider(color: CommonAssets.dividercolor,thickness: 2,),
                           remainingEmi(snapshot.data.customerInfoModel),
                           propertiesShow(projectNameSnapshot.data.ownProperties,true,size),
 
@@ -389,7 +424,7 @@ Widget remainingEmi( CustomerInfoModel customerInfoModel){
             )));
       },
       child: Card(
-      elevation: 20,
+
         margin: EdgeInsets.symmetric(vertical: size.height*0.02,horizontal: size.width*0.04),
         child: Padding(
 
@@ -492,7 +527,7 @@ Widget propertiesShow(List<ProjectNameList> projectDataList,bool isOwn,Size size
                           child:
 
                           CachedNetworkImage(
-                            fit: BoxFit.fitHeight,
+                            fit: BoxFit.cover,
                             imageUrl:  projectDataList[index].imagesUrl.first,
                             placeholder: (context, url) => Center(child: CircularLoading(),),
                             errorWidget: (context, url, error) => Icon(Icons.error),

@@ -12,9 +12,9 @@ class AppVersion{
 });
   factory AppVersion.of(DocumentSnapshot snapshot){
     return AppVersion(
-        active: snapshot.data()['Service'],
-        download: snapshot.data()['DownloadLink'],
-        version: snapshot.data()['Version']
+        active: snapshot['Service'],
+        download: snapshot['DownloadLink'],
+        version: snapshot['Version']
     );
   }
 }

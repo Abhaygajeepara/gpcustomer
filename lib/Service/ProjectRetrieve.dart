@@ -19,10 +19,13 @@ class ProjectRetrieve{
   String loadId;
   String projectName;
   String typeOfProject;
+  String adsId;
  // String partOfSociety;
  // String propertiesNumber;
 // String typeOfProject;
-
+setAds(String ad){
+  this.adsId = ad;
+}
  setProjectName(String val,String projectType){
    this.projectName  = val;
    this.typeOfProject = projectType;
@@ -68,7 +71,14 @@ class ProjectRetrieve{
     }).toList();
   }
   Stream<List<AdvertiseModel>> get THREEADVERTISE{
-    return adsReference.orderBy('IsActive',descending: false).limit(2).snapshots().map(_advertise);
+    return adsReference.where('IsActive',isEqualTo: true).limit(3).snapshots().map(_advertise);
+  }
+  AdvertiseModel _advertiseSingle(DocumentSnapshot snapshot){
+    return AdvertiseModel.of(snapshot);
+
+  }
+  Stream<AdvertiseModel> get SINGLEADVERTISE{
+    return adsReference.doc(adsId).snapshots().map(_advertiseSingle);
   }
   Stream<CustomerAndAdvertise> BROKERDATAANDADVERTISE(){
     return Rx.combineLatest2(SINGLECUSTOMERDATA, THREEADVERTISE, (CustomerInfoModel _customerInfoModel, List<AdvertiseModel> _adver,) {

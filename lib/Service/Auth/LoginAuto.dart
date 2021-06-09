@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class LogInAndSignIn {
 final FirebaseAuth _auth = FirebaseAuth.instance;
-final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 final customerRef = FirebaseFirestore.instance.collection('Customer');
   Future Login(String id,)async{
   SharedPreferences preferences = await SharedPreferences.getInstance();
