@@ -3,34 +3,34 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 class SinglePropertiesLoanInfo{
   int emiId; // which emi
-  Timestamp installmentDate;
-  bool emiPending;
-  String typeOfPayment;
-  String ifsc;
-  String  upiId;
-  String bankAccountNumber;
-  String payerName;
-  String receiverName;
-  String relation;
-  int amount;
-  Timestamp paymentTime;
-  String loadId;
+  Timestamp/*?*//*?*//*?*//*?*/ installmentDate;
+  bool?/*?*//*?*/ emiPending;
+  String?/*?*//*?*/ typeOfPayment;
+  String?/*?*//*?*/ ifsc;
+  String?/*?*//*?*/  upiId;
+  String?/*?*//*?*/ bankAccountNumber;
+  String?/*?*//*?*//*?*/ payerName;
+  String?/*?*//*?*/ receiverName;
+  String?/*?*//*?*/ relation;
+  int?/*?*//*?*/ amount;
+  Timestamp?/*?*//*?*//*?*/ paymentTime;
+  String?/*?*//*?*/ loadId;
 
 
   SinglePropertiesLoanInfo({
-    @required  this.emiId,
-  @required this.installmentDate,
-    @required this.emiPending,
-    @required this.typeOfPayment,
-    @required this.ifsc,
-    @required this.upiId,
-    @required  this.bankAccountNumber,
-    @required  this.payerName,
-    @required this.receiverName,
-  @required this.relation,
-    @required this.amount,
-    @required this.paymentTime,
-    @required this.loadId
+    /*required*/ /*required*/ /*required*/ /*required*/ required  this.emiId,
+  /*required*/ /*required*/ /*required*/ /*required*/ required this.installmentDate,
+    /*required*/ /*required*/ required this.emiPending,
+    /*required*/ /*required*/ /*required*/ required this.typeOfPayment,
+    /*required*/ /*required*/ /*required*/ required this.ifsc,
+    /*required*/ /*required*/ /*required*/ required this.upiId,
+    /*required*/ /*required*/ /*required*/ required  this.bankAccountNumber,
+    /*required*/ /*required*/ /*required*/ required  this.payerName,
+    /*required*/ /*required*/ /*required*/ required this.receiverName,
+  /*required*/ /*required*/ /*required*/ /*required*/ /*required*/ required this.relation,
+    /*required*/ /*required*/ required this.amount,
+    /*required*/ /*required*/ required this.paymentTime,
+    /*required*/ /*required*/ /*required*/ required this.loadId
 
   });
   factory SinglePropertiesLoanInfo.of(DocumentSnapshot snapshot){

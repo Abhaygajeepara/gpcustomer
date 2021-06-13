@@ -5,7 +5,7 @@ import 'package:gpgroup/app_localization/app_localizations.dart';
 
 class PaidEmiDetails extends StatefulWidget {
   SinglePropertiesLoanInfo singlePropertiesLoanInfo;
-  PaidEmiDetails({@required this.singlePropertiesLoanInfo});
+  PaidEmiDetails({required this.singlePropertiesLoanInfo});
   @override
   _PaidEmiDetailsState createState() => _PaidEmiDetailsState();
 }
@@ -20,8 +20,8 @@ class _PaidEmiDetailsState extends State<PaidEmiDetails> {
     final verticalSpace = size.height *0.02;
     return Scaffold(
       appBar: CommonappBar(
-          widget.singlePropertiesLoanInfo.loadId,
-          Container(),context),
+          widget.singlePropertiesLoanInfo.loadId!,
+          Container(),context) as PreferredSizeWidget?,
       body: SingleChildScrollView(
         child: Padding(
           padding:  EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.width*0.02),
@@ -31,7 +31,7 @@ class _PaidEmiDetailsState extends State<PaidEmiDetails> {
               SizedBox(height: minverticalSpace,),
               Center(
                 child: Text(
-                  AppLocalizations.of(context).translate('PaidEMI'),
+                  AppLocalizations.of(context)!.translate('PaidEMI')!,
                   style: TextStyle(
                     fontWeight: fontWeight,
                     fontSize: size.height*0.03
@@ -42,7 +42,7 @@ class _PaidEmiDetailsState extends State<PaidEmiDetails> {
               Divider(thickness: 2,color: Theme.of(context).primaryColor,),
               SizedBox(height: minverticalSpace,),
               Text(
-                AppLocalizations.of(context).translate('Date'),
+                AppLocalizations.of(context)!.translate('Date')!,
                 style: TextStyle(
                     fontSize: fontSize,
                     fontWeight: fontWeight
@@ -50,7 +50,7 @@ class _PaidEmiDetailsState extends State<PaidEmiDetails> {
               ),
               SizedBox(height: minverticalSpace,),
               Text(
-                widget.singlePropertiesLoanInfo.paymentTime.toDate().toString().substring(0,19),
+                widget.singlePropertiesLoanInfo.paymentTime!.toDate().toString().substring(0,19),
                 style: TextStyle(
                   fontSize: fontSize,
 
@@ -58,7 +58,7 @@ class _PaidEmiDetailsState extends State<PaidEmiDetails> {
               ),
             SizedBox(height: verticalSpace,),
               Text(
-                AppLocalizations.of(context).translate('TypeOfPayment'),
+                AppLocalizations.of(context)!.translate('TypeOfPayment')!,
                 style: TextStyle(
                   fontSize: fontSize,
                   fontWeight: fontWeight
@@ -66,7 +66,7 @@ class _PaidEmiDetailsState extends State<PaidEmiDetails> {
               ),
               SizedBox(height: minverticalSpace,),
               Text(
-               widget.singlePropertiesLoanInfo.typeOfPayment,
+               widget.singlePropertiesLoanInfo.typeOfPayment!,
                 style: TextStyle(
                     fontSize: fontSize,
 
@@ -79,7 +79,7 @@ class _PaidEmiDetailsState extends State<PaidEmiDetails> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      AppLocalizations.of(context).translate('BankAccountNumber'),
+                      AppLocalizations.of(context)!.translate('BankAccountNumber')!,
                       style: TextStyle(
                           fontSize: fontSize,
                           fontWeight: fontWeight
@@ -95,7 +95,7 @@ class _PaidEmiDetailsState extends State<PaidEmiDetails> {
                     ),
                     SizedBox(height: verticalSpace,),
                     Text(
-                      AppLocalizations.of(context).translate('IFSC'),
+                      AppLocalizations.of(context)!.translate('IFSC')!,
                       style: TextStyle(
                           fontSize: fontSize,
                           fontWeight: fontWeight
@@ -103,7 +103,7 @@ class _PaidEmiDetailsState extends State<PaidEmiDetails> {
                     ),
                     SizedBox(height: minverticalSpace,),
                     Text(
-                      widget.singlePropertiesLoanInfo.ifsc.toUpperCase(),
+                      widget.singlePropertiesLoanInfo.ifsc!.toUpperCase(),
                       style: TextStyle(
                         fontSize: fontSize,
 
@@ -117,7 +117,7 @@ class _PaidEmiDetailsState extends State<PaidEmiDetails> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    AppLocalizations.of(context).translate('UPIID'),
+                    AppLocalizations.of(context)!.translate('UPIID')!,
                     style: TextStyle(
                         fontSize: fontSize,
                         fontWeight: fontWeight
@@ -138,7 +138,7 @@ class _PaidEmiDetailsState extends State<PaidEmiDetails> {
 
 
               Text(
-                AppLocalizations.of(context).translate('PayerName'),
+                AppLocalizations.of(context)!.translate('PayerName')!,
                 style: TextStyle(
                     fontSize: fontSize,
                     fontWeight: fontWeight
@@ -146,7 +146,7 @@ class _PaidEmiDetailsState extends State<PaidEmiDetails> {
               ),
               SizedBox(height: minverticalSpace,),
               Text(
-                widget.singlePropertiesLoanInfo.payerName,
+                widget.singlePropertiesLoanInfo.payerName!,
                 style: TextStyle(
                   fontSize: fontSize,
 
@@ -155,7 +155,7 @@ class _PaidEmiDetailsState extends State<PaidEmiDetails> {
 
               SizedBox(height: verticalSpace,),
               Text(
-                AppLocalizations.of(context).translate('ReceiverName'),
+                AppLocalizations.of(context)!.translate('ReceiverName')!,
                 style: TextStyle(
                     fontSize: fontSize,
                     fontWeight: fontWeight
@@ -163,7 +163,7 @@ class _PaidEmiDetailsState extends State<PaidEmiDetails> {
               ),
               SizedBox(height: minverticalSpace,),
               Text(
-                widget.singlePropertiesLoanInfo.receiverName,
+                widget.singlePropertiesLoanInfo.receiverName!,
                 style: TextStyle(
                   fontSize: fontSize,
 
@@ -171,7 +171,7 @@ class _PaidEmiDetailsState extends State<PaidEmiDetails> {
               ),
               SizedBox(height: verticalSpace,),
               Text(
-                AppLocalizations.of(context).translate('RelationWithCustomer'),
+                AppLocalizations.of(context)!.translate('RelationWithCustomer')!,
                 style: TextStyle(
                     fontSize: fontSize,
                     fontWeight: fontWeight
@@ -179,7 +179,7 @@ class _PaidEmiDetailsState extends State<PaidEmiDetails> {
               ),
               SizedBox(height: minverticalSpace,),
               Text(
-                widget.singlePropertiesLoanInfo.relation,
+                widget.singlePropertiesLoanInfo.relation!,
                 style: TextStyle(
                   fontSize: fontSize,
 

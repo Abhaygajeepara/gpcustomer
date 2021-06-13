@@ -3,14 +3,14 @@ import 'package:flutter/cupertino.dart';
 
 class AdvertiseModel {
   String id;
-  String description;
+  String? description;
   List<String> imageUrl;
-  bool isActive;
+  bool? isActive;
   AdvertiseModel({
-    @required this.id,
-    @required this.description,
-    @required this.imageUrl,
-    @required this.isActive
+    required this.id,
+    required this.description,
+    required this.imageUrl,
+    required this.isActive
 
   });
 

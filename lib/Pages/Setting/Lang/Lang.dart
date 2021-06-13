@@ -12,7 +12,7 @@ class SelectLanguage extends StatefulWidget {
 }
 
 class _SelectLanguageState extends State<SelectLanguage> {
-  SharedPreferences preferences;
+  late SharedPreferences preferences;
   bool loading = true;
   @override
   void initState() {
@@ -39,8 +39,8 @@ class _SelectLanguageState extends State<SelectLanguage> {
     final langChange = Provider.of<LangChange>(context);
     return Scaffold(
       appBar: CommonappBar(
-      AppLocalizations.of(context).translate('Language')
-      ,Container(),context),
+      AppLocalizations.of(context)!.translate('Language')!
+      ,Container(),context) as PreferredSizeWidget?,
       body: Padding(
         padding: EdgeInsets.all(10.0),
         child:loading?CircularLoading(): ListView.builder(

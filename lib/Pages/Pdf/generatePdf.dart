@@ -5,13 +5,14 @@ import 'package:gpgroup/Commonassets/Commonassets.dart';
 
 import 'package:gpgroup/Model/Loan/statement.dart';
 import 'package:gpgroup/Model/Users/CustomerModel.dart';
+import 'package:gpgroup/Service/ProjectRetrieve.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class GeneratePdf{
-  Future createPdf(List<StatementModel> statementList,BookingAndLoan customerData,String projectName)async{
+  Future createPdf(List<StatementModel> statementList,BookingAndLoan customerData,String? projectName)async{
     // final projectRetrieve = Provider.of<ProjectRetrieve>(context);
     Timestamp now = Timestamp.now();
     String pdfName = "${customerData.bookingData.propertiesNumber}+${now.toDate().toString().substring(0,16)}";
@@ -32,7 +33,7 @@ class GeneratePdf{
                   )
                   )
               ),
-              details(customerData, projectName),
+              details(customerData, projectName!),
               pw.SizedBox(height: 20),
               pw.Text(
                   'Loan Statement',
@@ -49,12 +50,16 @@ class GeneratePdf{
     //  final dir = await getApplicationDocumentsDirectory();
     final storageRequest = await Permission.storage.request();
     if(storageRequest.isGranted){
-    final path= Directory("storage/emulated/0/Download/GPGroup/Statement");
-    if ((!await path.exists())){
-      path.create();
-    }
-
-    final file = File('storage/emulated/0/Download/GPGroup/Statement/${pdfName}.pdf');
+       final path = await ProjectRetrieve().storeFile();
+      // final file = File('${path}Statement/${pdfName}.pdf');
+      // print('asd'+file.path);
+      // await   file.writeAsBytes(await pdf.save());
+    // final path= Directory("storage/emulated/0/Download/GPGroup/Statement");
+    // if ((!await path.exists())){
+    //   path.create();
+    // }
+      String fileStorePath =  "${path}/Statement";
+    final file = File("${fileStorePath}/${pdfName}.pdf");
 
     await   file.writeAsBytes(await pdf.save());
 
@@ -119,17 +124,17 @@ class GeneratePdf{
               ),
               pw.Expanded(
                 child: pw.Text(
-                    customerDate.bookingData.part
+                    customerDate.bookingData.part!
                 ),
               ),
               pw.Expanded(
                 child: pw.Text(
-                  customerDate.bookingData.propertiesNumber
+                  customerDate.bookingData.propertiesNumber!
                 ),
               ),
               pw.Expanded(
                 child: pw.Text(
-                    customerDate.bookingData.loanReferenceCollectionName
+                    customerDate.bookingData.loanReferenceCollectionName!
                 ),
               )
             ]

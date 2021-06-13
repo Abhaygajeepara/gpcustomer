@@ -26,7 +26,7 @@ class _WrapperState extends State<Wrapper> {
 
     return StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context,AsyncSnapshot<User> snapshot) {
+      builder: (context,AsyncSnapshot<User?> snapshot) {
         if(snapshot.connectionState == ConnectionState.waiting)
           return CircularLoading();
         if(!snapshot.hasData || snapshot.data == null)

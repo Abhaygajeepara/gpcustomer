@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -47,17 +50,36 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  SharedPreferences preferences;
-  Locale _oldLocale;
+  String currentAppVersion = '1.0.0';
+  ReceivePort _port = ReceivePort();
+  late SharedPreferences preferences;
+  Locale? _oldLocale;
+  @override
+  void dispose() {
+    IsolateNameServer.removePortNameMapping('downloader_send_port');
+    super.dispose();
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    IsolateNameServer.registerPortWithName(_port.sendPort, 'downloader_send_port');
+    _port.listen((dynamic data) {
+      String id = data[0];
+      DownloadTaskStatus status = data[1];
+      int progress = data[2];
+      setState((){ });
+    });
+    FlutterDownloader.registerCallback(downloadCallback);
     waitting();
+  }
+  static void downloadCallback(String id, DownloadTaskStatus status, int progress) {
+    final SendPort send = IsolateNameServer.lookupPortByName('downloader_send_port')!;
+    send.send([id, status, progress]);
   }
   waitting()async{
     preferences = await SharedPreferences.getInstance();
-    await preferences.setString('Version',"1.0.0");
+    await preferences.setString('Version',currentAppVersion);
     !preferences.containsKey('Language')?await preferences.setString('Language', "en_US"): preferences.getString('Language');
     print('pref =${ preferences.getString('Language')}');
     if( preferences.getString('Language') == 'hi_IN'){
@@ -97,7 +119,7 @@ class _MyAppState extends State<MyApp> {
             //print(connectionSnapshot.data);
             if(connectionSnapshot.data == ConnectivityStatus.Cellular
                 || connectionSnapshot.data == ConnectivityStatus.WiFi){
-              return StreamBuilder<Locale>(
+              return StreamBuilder<Locale?>(
                   stream:   lang.out,
                   builder: (context,local){
                     return StreamBuilder<AppVersion>(
@@ -115,7 +137,10 @@ class _MyAppState extends State<MyApp> {
                                 theme: ThemeData(
                                   primaryColor:  Colors.white,
                                   buttonColor: Colors.black,
-
+                                  elevatedButtonTheme: ElevatedButtonThemeData(
+                                    style: ElevatedButton.styleFrom(
+                                      primary: CommonAssets.buttonColor,
+                                    ),),
 
                                   //  primaryColor:  Colors.black.withOpacity(0.6),
                                   bottomAppBarColor:Color(0xff0cb1b7),
@@ -139,7 +164,7 @@ class _MyAppState extends State<MyApp> {
                                   GlobalWidgetsLocalizations.delegate,
                                 ],
 
-                                home: redirectWidget(snapshot.data),
+                                home: redirectWidget(snapshot.data!),
                               ),
                             ),
                           );
@@ -207,49 +232,60 @@ class _MyAppState extends State<MyApp> {
         return SplashPage();
       }else{
         return Scaffold(
-          body: Center(child: Padding(
-            padding:  EdgeInsets.all(15.0),
-            child: RaisedButton(
-              color: CommonAssets.buttonColor,
-              shape: StadiumBorder(),
-              child: Text(
-                "Download",
+          body: Center(child: SingleChildScrollView(
+            child: Padding(
+              padding:  EdgeInsets.all(12.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset('assets/vrajraj.png'),
+                  SizedBox(height: 15,),
+                  Text('Download New Application',style: TextStyle(
+                    fontSize: 16,
+                    color: CommonAssets.errorColor
+                  ),),
+                  SizedBox(height: 10,),
 
-                style: TextStyle(
-                  color: CommonAssets.buttonTextColor,
-                      fontSize: 20,
-                ),
-              ),
-              onPressed: ()async{
-                final storageRequest = await Permission.storage.request();
-                if(storageRequest.isGranted){
-                  final directory = await getExternalStorageDirectory();
-                  final path= Directory("storage/emulated/0/Download/GPGroup");
-                  print(directory.path);
-                  if ((await path.exists())){
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
 
-                  //  print("exist");
-                  }else{
+                      shape: StadiumBorder(),
+                    ),
 
-                  //  print("not exist");
-                    path.create();
+                    child: Text(
+                      "Download",
 
-                  }
-                  final taskId = await FlutterDownloader.enqueue(
-                    url: appVersion.download,
-                    savedDir: path.path,
-                    showNotification: true, // show download progress in status bar (for Android)
-                    openFileFromNotification: true, // click on notification to open downloaded file (for Android)
-                  );
-                  print(taskId.length);
+                      style: TextStyle(
+                        color: CommonAssets.buttonTextColor,
+                        fontSize: 20,
+                      ),
+                    ),
+                    onPressed: ()async{
+                      final storageRequest = await Permission.storage.request();
+                      if(storageRequest.isGranted){
+
+                        final storagePath =await  ProjectRetrieve().storeFile();
+                        final path= Directory(storagePath);
+
+                        final taskId = await (FlutterDownloader.enqueue(
+                          url: appVersion.download,
+                          savedDir: path.path,
+                          showNotification: true, // show download progress in status bar (for Android)
+                          openFileFromNotification: true, // click on notification to open downloaded file (for Android)
+                        ) as FutureOr<String>);
+                        print(taskId.length);
 
 
-                }
-                // else {
-                //   openAppSettings();
-                // }
+                      }
+                      // else {
+                      //   openAppSettings();
+                      // }
 
-              },
+                    },
+                  ),
+                ],
+              )
             ),
           )),
         );

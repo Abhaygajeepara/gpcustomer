@@ -25,7 +25,7 @@ class _SingleAdsState extends State<SingleAds> {
     final spaceVertical = size.height *0.01;
     final fontSize = size.height*0.015;
     return Scaffold(
-      appBar: CommonappBar(projectRetrieve.adsId,Container(),context),
+      appBar: CommonappBar(projectRetrieve.adsId!,Container(),context) as PreferredSizeWidget?,
       body: StreamBuilder<AdvertiseModel>(
         stream: projectRetrieve.SINGLEADVERTISE,
         builder: (context,snapshot){
@@ -52,7 +52,7 @@ class _SingleAdsState extends State<SingleAds> {
 
                       scrollDirection: Axis.horizontal,
                     ),
-                    itemCount: snapshot.data.imageUrl.length,
+                    itemCount: snapshot.data!.imageUrl.length,
                     itemBuilder: (ctx, index, realIdx){
                       return GestureDetector(
 
@@ -60,36 +60,27 @@ class _SingleAdsState extends State<SingleAds> {
                           Navigator.push(context, PageRouteBuilder(
                             //    pageBuilder: (_,__,____) => BuildingStructure(),
                             pageBuilder: (_, __, ___) => ImageZoom(
-                                image: snapshot.data.imageUrl),
+                                image: snapshot.data!.imageUrl),
                             transitionDuration: Duration(
                                 milliseconds: 0),
                           ));
-                          // showDialog(
-                          //     context: context,
-                          //     builder: (BuildContext  context){
-                          //       return Dialog(
-                          //         child:
-                          //         CachedNetworkImage(
-                          //           imageUrl:  snapshot.data.imageUrl[index],
-                          //
-                          //           fit: BoxFit.cover,
-                          //           width: size.width *0.8,
-                          //           placeholder: (context, url) => Center(child: CircularLoading(),),
-                          //           errorWidget: (context, url, error) => Icon(Icons.error),
-                          //         ),
-                          //
-                          //       );
-                          //     }
-                          // );
                         },
-                        child: Image.network(
-                          snapshot.data.imageUrl[index],
-                          width: size.width,
-                          height:size.height *0.3 ,
-                          fit:BoxFit.fill,
-
-
+                        child:
+                        CachedNetworkImage(
+                          imageUrl: snapshot.data!.imageUrl[index],
+                          fit: BoxFit.cover,
+                          width: size.width * 0.8,
+                          placeholder:
+                              (context, url) =>
+                              Center(
+                                child:
+                                CircularLoading(),
+                              ),
+                          errorWidget: (context,
+                              url, error) =>
+                              Icon(Icons.error),
                         ),
+
                       );
                     }
                 ),
@@ -122,7 +113,7 @@ class _SingleAdsState extends State<SingleAds> {
                       // ),
                       SizedBox(height: spaceVertical *2,),
                       Text(
-                        AppLocalizations.of(context).translate('Description'),
+                        AppLocalizations.of(context)!.translate('Description')!,
                         style: TextStyle(
                             fontSize: labelFontSize,
                             fontWeight: fontWeight
@@ -131,7 +122,7 @@ class _SingleAdsState extends State<SingleAds> {
                       ),
                       SizedBox(height: spaceVertical *2,),
                       Text(
-                        snapshot.data.description ,
+                        snapshot.data!.description! ,
                         style: TextStyle(
                           fontSize: labelFontSize,
 

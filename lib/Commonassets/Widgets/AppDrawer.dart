@@ -39,7 +39,7 @@ class _AppDrawerState extends State<AppDrawer> {
           ListTile(
             onTap: ()async{
               Navigator.pop(context);
-              return   await Navigator.push(
+                 await Navigator.push(
                 context,
                 PageRouteBuilder(
                   pageBuilder: (_, __, ___) => SelectLanguage(),
@@ -55,7 +55,7 @@ class _AppDrawerState extends State<AppDrawer> {
               children: [
                 Icon(Icons.language,color: iconColor,),
                 SizedBox(width: spaceHor,),
-                Text(AppLocalizations.of(context).translate('Language'))
+                Text(AppLocalizations.of(context)!.translate('Language')!)
               ],
             ),
           ),
@@ -72,7 +72,7 @@ class _AppDrawerState extends State<AppDrawer> {
               children: [
                 Icon(Icons.exit_to_app,color: iconColor,),
                 SizedBox(width: spaceHor,),
-                Text(AppLocalizations.of(context).translate('LogOut'))
+                Text(AppLocalizations.of(context)!.translate('LogOut')!)
               ],
             ),
           ),

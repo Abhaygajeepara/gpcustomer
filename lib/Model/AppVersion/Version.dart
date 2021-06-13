@@ -4,11 +4,11 @@ import 'package:flutter/cupertino.dart';
 class AppVersion{
   String version;
   String download;
-  bool active;
+  bool/*?*/ active;
   AppVersion({
-    @required this.active,
-    @required this.download,
-    @required this.version
+    /*required*/ /*required*/ required this.active,
+    /*required*/ /*required*/ required this.download,
+    /*required*/ /*required*/ /*required*/ required this.version
 });
   factory AppVersion.of(DocumentSnapshot snapshot){
     return AppVersion(

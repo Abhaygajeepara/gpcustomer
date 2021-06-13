@@ -2,13 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gpgroup/Commonassets/Commonassets.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
-import 'package:gpgroup/Pages/Customer/ExistingCustomerData.dart';
+import 'package:gpgroup/Pages/Customer/CustomerData.dart';
 import 'package:gpgroup/Service/ProjectRetrieve.dart';
 import 'package:provider/provider.dart';
 
 class CustomerProperties extends StatefulWidget {
   List<Map<String ,dynamic>> customerProperties ;
-  CustomerProperties({@required this.customerProperties});
+  CustomerProperties({required this.customerProperties});
   @override
   _CustomerPropertiesState createState() => _CustomerPropertiesState();
 }
@@ -36,7 +36,7 @@ class _CustomerPropertiesState extends State<CustomerProperties> {
     final propertiesFontSize = size.height*0.02;
     final _projectRetrieve = Provider.of<ProjectRetrieve>(context);
 
-    String typeofProject =_projectRetrieve.typeOfProject;
+    String? typeofProject =_projectRetrieve.typeOfProject;
     print(typeofProject);
     if(typeofProject=='Society'){
       image = imageList[0];
@@ -52,8 +52,8 @@ class _CustomerPropertiesState extends State<CustomerProperties> {
     }
     return Scaffold(
       appBar: CommonappBar(
-          _projectRetrieve.projectName,
-          Container(),context),
+          _projectRetrieve.projectName!,
+          Container(),context) as PreferredSizeWidget?,
       body: GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2),

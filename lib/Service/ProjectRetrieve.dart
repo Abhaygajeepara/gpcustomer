@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -10,23 +11,25 @@ import 'package:gpgroup/Model/Project/InnerData.dart';
 import 'package:gpgroup/Model/Project/ProjectDetails.dart';
 import 'package:gpgroup/Model/Users/BrokerData.dart';
 import 'package:gpgroup/Model/Users/CustomerModel.dart';
+import 'package:gpgroup/main.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ProjectRetrieve{
- String brokerId;
-  String customerId;
-  String customerName;
-  String loadId;
-  String projectName;
-  String typeOfProject;
-  String adsId;
+ String? brokerId;
+  String? customerId;
+  String? customerName;
+  String? loadId;
+  String? projectName;
+  String? typeOfProject;
+  String? adsId;
  // String partOfSociety;
  // String propertiesNumber;
 // String typeOfProject;
 setAds(String ad){
   this.adsId = ad;
 }
- setProjectName(String val,String projectType){
+ setProjectName(String? val,String? projectType){
    this.projectName  = val;
    this.typeOfProject = projectType;
 
@@ -39,14 +42,14 @@ setAds(String ad){
  //   this.partOfSociety = part;
  //   this.propertiesNumber =propertyId;
  // }
-  setCustomer(String id,){
+  setCustomer(String? id,){
     this.customerId = id;
 
   }
   setCustomerMobileNumber(String name){
    this.customerName =name;
   }
-  setLoanRef(String ref){
+  setLoanRef(String? ref){
     this.loadId = ref;
   }
 
@@ -91,7 +94,7 @@ setAds(String ad){
     }).toList();
   }
   Stream<List<SinglePropertiesLoanInfo>> get LOANINFO{
-    return FirebaseFirestore.instance.collection('Loan').doc(projectName).collection(loadId).orderBy("InstallmentDate",descending:false ).snapshots().map((_listLoanData));
+    return FirebaseFirestore.instance.collection('Loan').doc(projectName).collection(loadId!).orderBy("InstallmentDate",descending:false ).snapshots().map((_listLoanData));
   }
 
   List<IncomeModel> _brokerSales(QuerySnapshot snapshot){
@@ -113,7 +116,7 @@ setAds(String ad){
     return infoReference.doc('CustomerApp').snapshots().map(appVersion);
   }
  Stream<BookingDataModel> get CUSTOMERSINGLEPROPETIES{
-   return _loanReference.doc(projectName).collection(loadId).doc('BasicDetails').snapshots().map(_bookingDataModel);
+   return _loanReference.doc(projectName).collection(loadId!).doc('BasicDetails').snapshots().map(_bookingDataModel);
  }
  BookingDataModel _bookingDataModel(DocumentSnapshot snapshot){
    return  BookingDataModel.of(snapshot,loadId);
@@ -127,7 +130,7 @@ setAds(String ad){
  StreamController<CustomerOwnAndSellPropertiesProjects> controller = BehaviorSubject<CustomerOwnAndSellPropertiesProjects>();
   Stream<CustomerOwnAndSellPropertiesProjects>  get PROJECTLIST =>controller.stream;
 
-  addDataIntoStreamController(List<String> nameOfOwnProject,List<String> nameOfSoldProject)async{
+  addDataIntoStreamController(List<String?> nameOfOwnProject,List<String?> nameOfSoldProject)async{
     CustomerOwnAndSellPropertiesProjects customerOwnAndSellPropertiesProjects;
     List<ProjectNameList> ownProperties =[];
     List<ProjectNameList> soldProperties =[];
@@ -180,4 +183,40 @@ setAds(String ad){
 
   StreamController<String> splashController = BehaviorSubject<String>();
   Stream<String> get SPLASHSTREAM =>splashController.stream;
+
+  Future  storeFile()async{
+    String filepath = (await getExternalStorageDirectory())!.path;
+
+    print(filepath);
+    String mainfolder = "";
+    String statementFolder ="" ;
+    List<String> listFolders = filepath.split("/");
+    for (int i = 1; i < listFolders.length; i++) {
+      String s = listFolders[i];
+      if (s != "Android") {
+        mainfolder = mainfolder + "/" + s;
+        statementFolder = statementFolder + "/" + s;
+      }
+      else {
+        break;
+      }
+    }
+    mainfolder = mainfolder + "/" + "Vrajraj";
+    statementFolder = statementFolder + "/" + "Vrajraj"+"/"+"Statement";
+
+
+
+
+    Directory _mainFolder = Directory(mainfolder);
+    Directory _statementFolder = Directory(statementFolder);
+    print(_mainFolder);
+    print(_statementFolder);
+    if(!await _mainFolder.exists()){
+      _mainFolder.create(recursive: true);
+    }
+    if(!await _statementFolder.exists()){
+      _statementFolder.create(recursive: true);
+    }
+    return mainfolder;
+  }
 }

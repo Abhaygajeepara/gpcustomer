@@ -17,11 +17,11 @@ import 'package:gpgroup/Model/User.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:gpgroup/Model/Users/BrokerData.dart';
 import 'package:gpgroup/Model/Users/CustomerModel.dart';
-import 'package:gpgroup/Pages/Customer/ExistingCustomerData.dart';
+import 'package:gpgroup/Pages/Customer/CustomerData.dart';
 import 'package:gpgroup/Pages/Customer/RemainingEMIDetails.dart';
 import 'package:gpgroup/Pages/Customer/ZoomImage.dart';
 import 'package:gpgroup/Pages/Project/ProjectInfo.dart';
-import 'package:gpgroup/Pages/Setting/Ads/SingleAds.dart';
+import 'Ads/SingleAds.dart';
 import 'package:gpgroup/Pages/Setting/Lang/Lang.dart';
 import 'package:gpgroup/Service/Auth/LoginAuto.dart';
 import 'package:gpgroup/Service/ProjectRetrieve.dart';
@@ -29,7 +29,7 @@ import 'package:gpgroup/app_localization/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:zoom_widget/zoom_widget.dart';
+
 
 class Home extends StatefulWidget {
   @override
@@ -40,24 +40,24 @@ class _HomeState extends State<Home> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   Future<SharedPreferences> preferences = SharedPreferences.getInstance();
   PageController pageController = PageController();
-  String customerId;
-  String token ;
+  String? customerId;
+  String? token ;
   bool loading = true;
 
   int receivedCommission = 0;
   int totalCommission = 0;
   int remainingCommission =0;
-  String currentMonth;
+  String? currentMonth;
 
-  List<Map<String ,dynamic>> dataList ;
+  List<Map<String ,dynamic>>? dataList ;
   bool cancelProperties = false;
   DateTime now = DateTime.now();
 
   List<List<Map<String ,dynamic>>> ownProperties =[];
   List<List<Map<String ,dynamic>>> soldProperties =[];
-  List<String> availableOwnProject = [];
-  List<String> availableSoldProject = [];
-  CustomerInfoModel profileData;
+  List<String?> availableOwnProject = [];
+  List<String?> availableSoldProject = [];
+  late CustomerInfoModel profileData;
 
 
 
@@ -191,7 +191,7 @@ class _HomeState extends State<Home> {
       appBar: CommonappBar(
           CommonAssets.apptitle,
          IconButton(icon: Icon(Icons.person), onPressed: (){
-       return    AwesomeDialog(
+           AwesomeDialog(
          context: context,
 
          dialogType: DialogType.INFO,
@@ -202,7 +202,7 @@ class _HomeState extends State<Home> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              AppLocalizations.of(context).translate('CustomerName'),
+              AppLocalizations.of(context)!.translate('CustomerName')!,
 
               style: TextStyle(
                   fontWeight: fontWeight,
@@ -211,14 +211,14 @@ class _HomeState extends State<Home> {
             ),
             SizedBox(height: spaceVertical,),
             Text(
-              profileData.customerName,
+              profileData.customerName!,
               style: TextStyle(
                   fontSize: fontSize
               ),
             ),
             SizedBox(height: spaceVertical,),
             Text(
-              AppLocalizations.of(context).translate('MobileNumber'),
+              AppLocalizations.of(context)!.translate('MobileNumber')!,
               style: TextStyle(
                   fontWeight: fontWeight,
                   fontSize: titleFontSize
@@ -238,7 +238,7 @@ class _HomeState extends State<Home> {
          // btnOkOnPress: () {},
        )..show();
          }),context
-      ),
+      ) as PreferredSizeWidget?,
       body: loading ?CircularLoading(): SingleChildScrollView(
         child: StreamBuilder<CustomerAndAdvertise>(
             stream: _projectRetrieve.BROKERDATAANDADVERTISE(),
@@ -247,12 +247,12 @@ class _HomeState extends State<Home> {
               if(snapshot.hasData){
                 //_projectRetrieve.setCustomerMobileNumber(snapshot.data.customerInfoModel.customerName);
                 //profileData use to display customer data
-                profileData = snapshot.data.customerInfoModel;
+                profileData = snapshot.data!.customerInfoModel;
 
-                categorize(snapshot.data.customerInfoModel,_projectRetrieve);
+                categorize(snapshot.data!.customerInfoModel,_projectRetrieve);
                 !cancelProperties?
-                dataList = snapshot.data.customerInfoModel.propertiesList:
-                dataList = snapshot.data.customerInfoModel.soldPropertiesList;
+                dataList = snapshot.data!.customerInfoModel.propertiesList:
+                dataList = snapshot.data!.customerInfoModel.soldPropertiesList;
                 return StreamBuilder<CustomerOwnAndSellPropertiesProjects>(
                   stream: _projectRetrieve.PROJECTLIST,
                   builder: (context,projectNameSnapshot) {
@@ -262,7 +262,7 @@ class _HomeState extends State<Home> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CarouselSlider.builder(
-                            itemCount:   snapshot.data.advertiseList.length,
+                            itemCount:   snapshot.data!.advertiseList.length,
                             options: CarouselOptions(
 
                             // height: 400,
@@ -281,14 +281,14 @@ class _HomeState extends State<Home> {
                             scrollDirection: Axis.horizontal,
                           ),
                             itemBuilder: (ctx, index, realIdx) {
-                              return snapshot.data.advertiseList.length <= 0 ?Image.asset(
+                              return snapshot.data!.advertiseList.length <= 0 ?Image.asset(
                     'assets/default.jpg',
 
                     )
                         : GestureDetector(
                                               onTap: () async {
                                                 _projectRetrieve.setAds(snapshot
-                                                    .data
+                                                    .data!
                                                     .advertiseList[index]
                                                     .id);
                                                 Navigator.push(context,
@@ -301,7 +301,7 @@ class _HomeState extends State<Home> {
                                                   Expanded(
                                                     child: CachedNetworkImage(
                                                       imageUrl: snapshot
-                                                          .data
+                                                          .data!
                                                           .advertiseList[index]
                                                           .imageUrl
                                                           .first,
@@ -329,9 +329,9 @@ class _HomeState extends State<Home> {
                                                   ),
                                                   AutoSizeText(
                                                     snapshot
-                                                        .data
+                                                        .data!
                                                         .advertiseList[index]
-                                                        .description,
+                                                        .description!,
                                                     maxLines: 1,
                                                     style: TextStyle(
                                                         fontWeight:
@@ -351,13 +351,13 @@ class _HomeState extends State<Home> {
                           SizedBox(height: size.height * 0.01,),
 
                          Divider(color: CommonAssets.dividercolor,thickness: 2,),
-                          remainingEmi(snapshot.data.customerInfoModel),
-                          propertiesShow(projectNameSnapshot.data.ownProperties,true,size),
+                          remainingEmi(snapshot.data!.customerInfoModel),
+                          propertiesShow(projectNameSnapshot.data!.ownProperties!,true,size),
 
                          // Divider(color: CommonAssets.AppbarTextColor,thickness: 2,),
 
 
-                          projectNameSnapshot.data.soldProperties.length <= 0?Container(): propertiesShow(projectNameSnapshot.data.soldProperties,false,size),
+                          projectNameSnapshot.data!.soldProperties!.length <= 0?Container(): propertiesShow(projectNameSnapshot.data!.soldProperties!,false,size),
 
 
                           //  Expanded(child: redirect(snapshot.data,_projectRetrieve,size))
@@ -418,7 +418,7 @@ Widget remainingEmi( CustomerInfoModel customerInfoModel){
     final fontSize = size.height*0.02;
     return customerInfoModel.remainingEMIList.length <=0?Container():GestureDetector(
       onTap: (){
-        return Navigator.push(context, PageRouteBuilder(pageBuilder:(_,__,___)=>
+         Navigator.push(context, PageRouteBuilder(pageBuilder:(_,__,___)=>
             RemainingEMIDetails(
               customerInfoModel: customerInfoModel,
             )));
@@ -435,7 +435,7 @@ Widget remainingEmi( CustomerInfoModel customerInfoModel){
             children: [
               Flexible(
                   child: Text(
-                      AppLocalizations.of(context).translate('Total')+" "+AppLocalizations.of(context).translate('RemainingEMI'),
+                      AppLocalizations.of(context)!.translate('Total')!+" "+AppLocalizations.of(context)!.translate('RemainingEMI')!,
                     style: TextStyle(
                       color: CommonAssets.totalRemainingEmiColor,
                       fontSize: fontSize,
@@ -457,8 +457,8 @@ Widget remainingEmi( CustomerInfoModel customerInfoModel){
 }
 Widget propertiesShow(List<ProjectNameList> projectDataList,bool isOwn,Size size,){
     final titleSize = size.height*0.02;
-    String title = isOwn? AppLocalizations.of(context).translate('OwnProperty')
-        :AppLocalizations.of(context).translate('CancelProperty');
+    String title = isOwn? AppLocalizations.of(context)!.translate('OwnProperty')!
+        :AppLocalizations.of(context)!.translate('CancelProperty')!;
     List<Map<String ,dynamic>> dataProperties ;
     bool isOwnPropertiesPage;
     final fontSize = size.height*0.02;
@@ -504,7 +504,7 @@ Widget propertiesShow(List<ProjectNameList> projectDataList,bool isOwn,Size size
 
                   // print(projectDataList[index].projectName);
                   // print(projectFindIndex);
-                  return Navigator.push(context, PageRouteBuilder(pageBuilder:(_,__,___)=>
+                   Navigator.push(context, PageRouteBuilder(pageBuilder:(_,__,___)=>
                       ProjectData(projectNameList: projectDataList[projectFindIndex], isOwnPropertiesPage: isOwnPropertiesPage, ownProperties: dataProperties)));
                 },
                 child: Column(

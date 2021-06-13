@@ -9,7 +9,7 @@ class RulesLanguage extends StatefulWidget {
   List<String> rulesdata ;
 
 
-  RulesLanguage({@required this.rulesdata,});
+  RulesLanguage({required this.rulesdata,});
 
   @override
   _RulesLanguageState createState() => _RulesLanguageState();
@@ -19,7 +19,7 @@ class _RulesLanguageState extends State<RulesLanguage> {
 
 
   final _fomrkey= GlobalKey<FormState>();
-  List<bool> _rulescheck ;
+  List<bool>? _rulescheck ;
   List<int> _selectedrules=[];
   @override
   void initState() {

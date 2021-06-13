@@ -13,16 +13,16 @@ class  BrokerModel{
   List remainingEmi;
   List<String> notificationKey;
   BrokerModel({
-    @required this.id,
-    @required this.name,
-  @required this.number,
-    @required this.alterNativeNumber,
-    @required  this.image,
-    @required this.password,
-    @required  this.isActiveUser,
-    @required this.clients,
-    @required this.remainingEmi,
-    @required this.notificationKey
+    /*required*/ required this.id,
+    /*required*/ required this.name,
+  /*required*/ required this.number,
+    /*required*/ required this.alterNativeNumber,
+    /*required*/ required  this.image,
+    /*required*/ required this.password,
+    /*required*/ required  this.isActiveUser,
+    /*required*/ required this.clients,
+    /*required*/ required this.remainingEmi,
+    /*required*/ required this.notificationKey
   });
 
     factory BrokerModel.of(DocumentSnapshot snapshot ){

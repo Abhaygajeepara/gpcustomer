@@ -16,9 +16,9 @@ class ProjectData extends StatefulWidget {
   ProjectNameList projectNameList;
 List<Map<String ,dynamic>> ownProperties ;
   bool isOwnPropertiesPage;
-  ProjectData({@required this.projectNameList,
-    @required this.isOwnPropertiesPage,
-  @required this.ownProperties});
+  ProjectData({required this.projectNameList,
+    required this.isOwnPropertiesPage,
+  required this.ownProperties});
   @override
   _ProjectDataState createState() => _ProjectDataState();
 }
@@ -44,13 +44,13 @@ class _ProjectDataState extends State<ProjectData> {
       appBar: CommonappBar(
       widget.projectNameList.projectName
       ,IconButton(icon: Icon(Icons.info_outline), onPressed: (){
-        return Navigator.push(context,
+         Navigator.push(context,
             PageRouteBuilder(pageBuilder:(_,__,___)=>Rules(
                 englishRules: widget.projectNameList.englishRules,
                 gujaratiRules: widget.projectNameList.gujaratiRules,
                 hindiRules: widget.projectNameList.hindiRules
             )));
-      },),context),
+      },),context) as PreferredSizeWidget?,
       body: SingleChildScrollView(
         child: Padding(
           padding:  EdgeInsets.symmetric( vertical: 8.0),
@@ -142,7 +142,7 @@ class _ProjectDataState extends State<ProjectData> {
                        FaIcon(FontAwesomeIcons.landmark),
                        SizedBox(width: smallHorSpace,),
                        Text(
-                         AppLocalizations.of(context).translate('Landmark'),
+                         AppLocalizations.of(context)!.translate('Landmark')!,
                          style: TextStyle(
                            fontSize:titleTextSize,
                            fontWeight: FontWeight.bold,
@@ -155,7 +155,7 @@ class _ProjectDataState extends State<ProjectData> {
                       height:smallverSpace,
                     ),
                     Text(
-                      widget.projectNameList.landmark,
+                      widget.projectNameList.landmark!,
                       style: TextStyle(
                         fontSize:valueTextSize,
 
@@ -171,7 +171,7 @@ class _ProjectDataState extends State<ProjectData> {
                         Icon(Icons.location_pin),
                         SizedBox(width: smallHorSpace,),
                         Text(
-                          AppLocalizations.of(context).translate('Address'),
+                          AppLocalizations.of(context)!.translate('Address')!,
                           style: TextStyle(
                             fontSize:titleTextSize,
                             fontWeight: FontWeight.bold,
@@ -184,7 +184,7 @@ class _ProjectDataState extends State<ProjectData> {
                       height:smallverSpace,
                     ),
                     Text(
-                      widget.projectNameList.address,
+                      widget.projectNameList.address!,
                       style: TextStyle(
                         fontSize:valueTextSize,
 
@@ -200,7 +200,7 @@ class _ProjectDataState extends State<ProjectData> {
                         Icon(Icons.description),
                         SizedBox(width: smallHorSpace,),
                         Text(
-                          AppLocalizations.of(context).translate('Description'),
+                          AppLocalizations.of(context)!.translate('Description')!,
                           style: TextStyle(
                             fontSize:titleTextSize,
                             fontWeight: FontWeight.bold,
@@ -214,7 +214,7 @@ class _ProjectDataState extends State<ProjectData> {
                     ),
 
                     Text(
-                      widget.projectNameList.description,
+                      widget.projectNameList.description!,
                       style: TextStyle(
                         fontSize:valueTextSize,
 
@@ -234,7 +234,7 @@ class _ProjectDataState extends State<ProjectData> {
         padding: EdgeInsets.symmetric(horizontal: size.width *0.1),
         shape: StadiumBorder(),
         child: Text(
-          AppLocalizations.of(context).translate('Property'),
+          AppLocalizations.of(context)!.translate('Property')!,
           style: TextStyle(
               fontSize: size.height*0.02,
             color: CommonAssets.buttonTextColor
@@ -242,7 +242,7 @@ class _ProjectDataState extends State<ProjectData> {
         ),
         color: Theme.of(context).buttonColor,
         onPressed: (){
-          return Navigator.push(context,
+           Navigator.push(context,
               PageRouteBuilder(pageBuilder:(_,__,___)=>
                   CustomerProperties(
                   customerProperties: widget.ownProperties,

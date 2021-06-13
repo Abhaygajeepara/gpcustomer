@@ -13,31 +13,31 @@ class StatementModel{
   int delayDuration;
   //Color textColor;
   StatementModel({
-    @required this.emiNo,
-    @required this.emiDate,
-    @required this.amount,
-    @required this.isPending,
-    @required this.paidAmount,
-    @required this.remainingAmount,
-    @required this.paymentDate,
-    @required this.delayDuration,
+    /*required*/ /*required*/ /*required*/ /*required*/ /*required*/ required this.emiNo,
+    /*required*/ required this.emiDate,
+    /*required*/ required this.amount,
+    /*required*/ /*required*/ required this.isPending,
+    /*required*/ required this.paidAmount,
+    /*required*/ required this.remainingAmount,
+    /*required*/ required this.paymentDate,
+    /*required*/ required this.delayDuration,
   //  @required this.textColor
 });
   factory StatementModel.of(SinglePropertiesLoanInfo singlePropertiesLoanInfo,
       int emiNumber,int paidAmount,int remainingEmi){
    // String paymentDate = singlePropertiesLoanInfo.emiPending?"":singlePropertiesLoanInfo.paymentTime.toDate().toString().substring(0,10);
     DateTime timeEmi = singlePropertiesLoanInfo.installmentDate.toDate();
-    DateTime timeOfPayment = singlePropertiesLoanInfo.paymentTime.toDate();
+    DateTime timeOfPayment = singlePropertiesLoanInfo.paymentTime!.toDate();
     int difference = timeEmi.difference(timeOfPayment).inDays;
     print(difference);
        return StatementModel(
         emiNo: emiNumber,
         emiDate: singlePropertiesLoanInfo.installmentDate,
-        amount: singlePropertiesLoanInfo.amount,
-        isPending: singlePropertiesLoanInfo.emiPending,
+        amount: singlePropertiesLoanInfo.amount!,
+        isPending: singlePropertiesLoanInfo.emiPending!,
         paidAmount: paidAmount,
            remainingAmount: remainingEmi,
-        paymentDate: singlePropertiesLoanInfo.paymentTime,
+        paymentDate: singlePropertiesLoanInfo.paymentTime!,
         delayDuration: difference,
      //  textColor: textColor
        );

@@ -25,7 +25,7 @@ final customerRef = FirebaseFirestore.instance.collection('Customer');
       if(customerExist.exists){
 
 
-          String notificationToken = await _firebaseMessaging.getToken();
+          String? notificationToken = await _firebaseMessaging.getToken();
 
           await _auth.signInWithEmailAndPassword(email:'test@Broker.com', password: 'Brokerpassword');
           await customerRef.doc(id).update({
@@ -53,10 +53,10 @@ final customerRef = FirebaseFirestore.instance.collection('Customer');
 
 
 
-Future signouts(String customerID)async{
+Future signouts(String? customerID)async{
     try{
       await _auth.signOut();
-      String notificationToken = await _firebaseMessaging.getToken();
+      String? notificationToken = await _firebaseMessaging.getToken();
       print('notificationToken=${notificationToken}');
       await customerRef.doc(customerID).update({
         "NotificationKey":FieldValue.arrayRemove([notificationToken]),

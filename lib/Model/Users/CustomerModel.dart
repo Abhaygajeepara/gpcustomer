@@ -4,21 +4,21 @@ import 'package:gpgroup/Model/Loan/LoanInfo.dart';
 import 'package:gpgroup/Model/Project/InnerData.dart';
 
 class CustomerInfoModel{
-  String customerName;
-  int number;
+  String? customerName;
+  int? number;
   List<Map<String,dynamic>> propertiesList;
   List<RemainingEmiModel> remainingEMIList;
   List<String> notificationKey;
   List<Map<String,dynamic>> soldPropertiesList;
   int totalRemainingEMIs;
   CustomerInfoModel({
-    @required this.customerName,
-    @required this.number,
-    @required this.propertiesList,
-    @required this.notificationKey,
-    @required this.remainingEMIList,
-    @required this.soldPropertiesList,
-    @required this.totalRemainingEMIs
+    /*required*/ required this.customerName,
+    /*required*/ required this.number,
+    /*required*/ required this.propertiesList,
+    /*required*/ required this.notificationKey,
+    /*required*/ required this.remainingEMIList,
+    /*required*/ required this.soldPropertiesList,
+    /*required*/ required this.totalRemainingEMIs
   });
   factory CustomerInfoModel.of(DocumentSnapshot snapshot){
     int totalRemainingEMI = 0;
@@ -26,7 +26,7 @@ class CustomerInfoModel{
     List<RemainingEmiModel> remainingEMIList = [];
     data.map((e)  {
       RemainingEmiModel remainingEmiModel = RemainingEmiModel.of(e);
-      totalRemainingEMI = totalRemainingEMI +remainingEmiModel.pendingEmi;
+      totalRemainingEMI = totalRemainingEMI +remainingEmiModel.pendingEmi!;
       remainingEMIList.add(remainingEmiModel);
     }).toList();
     // print(data.length);
@@ -47,19 +47,19 @@ class CustomerInfoModel{
 class BookingAndLoan{
   BookingDataModel bookingData;
   List<SinglePropertiesLoanInfo> loanData;
-  BookingAndLoan({@required this.bookingData,@required this.loanData});
+  BookingAndLoan({/*required*/ required this.bookingData,/*required*/ required this.loanData});
   factory BookingAndLoan.of( BookingDataModel _bookingData,List<SinglePropertiesLoanInfo> _loanData){
     return BookingAndLoan(bookingData: _bookingData, loanData: _loanData);
   }
 }
 class RemainingEmiModel{
-  String projectName;
-  String loanRef;
-  int pendingEmi;
+  String? projectName;
+  String? loanRef;
+  int? pendingEmi;
   RemainingEmiModel({
-    @required this.projectName,
-    @required this.loanRef,
-    @required this.pendingEmi
+    /*required*/ required this.projectName,
+    /*required*/ required this.loanRef,
+    /*required*/ required this.pendingEmi
 });
   factory RemainingEmiModel.of(Map<String,dynamic> data){
     return RemainingEmiModel(projectName: data['ProjectName'], loanRef: data['LoanRef'], pendingEmi: data['TotalPendingEmi']);

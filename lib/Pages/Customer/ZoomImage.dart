@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:gpgroup/Commonassets/CommonLoading.dart';
 import 'package:gpgroup/Commonassets/Commonassets.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
-import 'package:zoom_widget/zoom_widget.dart';
+import 'package:pinch_zoom/pinch_zoom.dart';
+
 
 class ImageZoom extends StatefulWidget {
   List<String> image;
-  ImageZoom({@required this.image});
+  ImageZoom({required this.image});
   @override
   _ImageZoomState createState() => _ImageZoomState();
 }
 
 class _ImageZoomState extends State<ImageZoom> {
-  String selectedUrl ;
+  late String selectedUrl ;
   @override
   void initState() {
     // TODO: implement initState
@@ -27,7 +28,7 @@ class _ImageZoomState extends State<ImageZoom> {
     return Scaffold(
       appBar: CommonappBar(
       CommonAssets.apptitle
-      ,Container(),context),
+      ,Container(),context) as PreferredSizeWidget?,
       body: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -67,21 +68,21 @@ class _ImageZoomState extends State<ImageZoom> {
             color: CommonAssets.appBarDrawerColor,
             thickness: 2,
           ),
-          Expanded(
-            child: Zoom(
-              backgroundColor: Colors.transparent,
-              initZoom: 0.0,
-              width: size.width*4,
-              height: size.height*4,
-              child: Image.network(
-               selectedUrl,
+      Expanded(
+        child: PinchZoom(
 
-                // fit:BoxFit.cover,
+          zoomedBackgroundColor: Colors.black.withOpacity(0.5),
+          resetDuration: const Duration(milliseconds: 100),
+          maxScale: 2.5,
+          image:
+          CachedNetworkImage(
+            imageUrl:  selectedUrl,
+            placeholder: (context, url) => Center(child: CircularLoading(),),
+            errorWidget: (context, url, error) => Icon(Icons.error),
 
-
-              ),
-            ),
           ),
+        ),
+      ),
         ],
       ),
 

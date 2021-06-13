@@ -14,10 +14,10 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool error = false;
-  String phoneNumber ;
+  late String phoneNumber ;
 
   bool loading = false;
-  String errorMessage='';
+  String? errorMessage='';
   final _formkey = GlobalKey<FormState>();
   bool _vision = true;
   void _visibility(){
@@ -50,7 +50,7 @@ class _LoginState extends State<Login> {
                    crossAxisAlignment: CrossAxisAlignment.center,
                    children: [
                      Text(
-                         AppLocalizations.of(context).translate('Vrajraj'),
+                         AppLocalizations.of(context)!.translate('Vrajraj')!,
                        style: TextStyle(
                          fontSize: size.height*0.05,
                          fontWeight: FontWeight.bold
@@ -58,7 +58,7 @@ class _LoginState extends State<Login> {
 
                      ),
                      Text(
-                       AppLocalizations.of(context).translate('Corporation'),
+                       AppLocalizations.of(context)!.translate('Corporation')!,
                        style: TextStyle(
                            fontSize: size.height*0.035,
                            fontWeight: FontWeight.bold
@@ -73,7 +73,7 @@ class _LoginState extends State<Login> {
                 ),
                      SizedBox(height: spaceVer*2,),
                      Text(
-                         AppLocalizations.of(context).translate('EnterMobileNumberRegisteredByAdmin'),
+                         AppLocalizations.of(context)!.translate('EnterMobileNumberRegisteredByAdmin')!,
                        textAlign: TextAlign.center,
                        style: TextStyle(
                          color: CommonAssets.AppbarTextColor,
@@ -84,14 +84,14 @@ class _LoginState extends State<Login> {
                TextFormField(
                  keyboardType: TextInputType.phone,
                  maxLength: 10,
-               decoration: loginAndsignincommoninputdecoration.copyWith(labelText:  AppLocalizations.of(context).translate('MobileNumber')),
+               decoration: loginAndsignincommoninputdecoration.copyWith(labelText:  AppLocalizations.of(context)!.translate('MobileNumber')),
            validator: numbervalidtion,
            onChanged: (val)=> phoneNumber =val,
          ),
                      SizedBox(height: size.height*0.02,),
 
                    error?  AutoSizeText(
-                       errorMessage,
+                       errorMessage!,
                       maxLines: 2,
                       style: TextStyle(
                         color: CommonAssets.errorColor,
@@ -104,7 +104,7 @@ class _LoginState extends State<Login> {
              shape: StadiumBorder(),
              color: CommonAssets.buttonColor,
              onPressed: ()async{
-              if(_formkey.currentState.validate()){
+              if(_formkey.currentState!.validate()){
                 setState(() {
                   loading = true;
                 });
@@ -114,7 +114,7 @@ class _LoginState extends State<Login> {
               setState(() {
                 error = true;
                 loading = false;
-                errorMessage =AppLocalizations.of(context).translate('Thisuserhasnopermissiontologin');
+                errorMessage =AppLocalizations.of(context)!.translate('Thisuserhasnopermissiontologin');
               });
             }
             else{
@@ -135,7 +135,7 @@ class _LoginState extends State<Login> {
 
              },
              child: Text(
-               AppLocalizations.of(context).translate('Login'),
+               AppLocalizations.of(context)!.translate('Login')!,
                style: TextStyle(
                    color: CommonAssets.defaultTextColor
                ),
@@ -145,15 +145,15 @@ class _LoginState extends State<Login> {
      ),
     );
   }
-  String numbervalidtion(String value){
+  String? numbervalidtion(String? value){
     Pattern pattern = '^[0-9]+';
-    RegExp regExp = new RegExp(pattern);
-    if (!regExp.hasMatch(value)) {
-      return AppLocalizations.of(context).translate("NumberOnly");
+    RegExp regExp = new RegExp(pattern as String);
+    if (!regExp.hasMatch(value!)) {
+      return AppLocalizations.of(context)!.translate("NumberOnly");
       return 'Enter The Number Only';
     }
     else if(value.length <10){
-      return AppLocalizations.of(context).translate("NumberIsLessThan10");
+      return AppLocalizations.of(context)!.translate("NumberIsLessThan10");
       return "Digits Is Grater Than One";
     }else {
       return null;

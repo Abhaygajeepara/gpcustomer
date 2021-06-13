@@ -14,9 +14,9 @@ class Rules extends StatefulWidget {
   List<String> gujaratiRules;
   List<String> hindiRules;
   Rules({
-    @required this.englishRules,
-    @required this.gujaratiRules,
-    @required this.hindiRules
+    required this.englishRules,
+    required this.gujaratiRules,
+    required this.hindiRules
 });
   @override
   _RulesState createState() => _RulesState();
@@ -25,9 +25,9 @@ class Rules extends StatefulWidget {
 class _RulesState extends State<Rules> {
   final _pageContoller = PageController(initialPage: 0);
   final _fomrkey = GlobalKey<FormState>();
-  String english;
-  String gujarati;
-  String hindi;
+  String? english;
+  String? gujarati;
+  String? hindi;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class _RulesState extends State<Rules> {
     return Scaffold(
         appBar: CommonappBar(
 
-          AppLocalizations.of(context).translate('Rules'),
+          AppLocalizations.of(context)!.translate('Rules')!,
             Container(),context
 
             //     PopupMenuButton(itemBuilder: (BuildContext contex){
@@ -48,7 +48,7 @@ class _RulesState extends State<Rules> {
             //     );
             //   }).toList();
             // })
-            ),
+            ) as PreferredSizeWidget?,
         body: Padding(
           padding:  EdgeInsets.symmetric(vertical: size.height*0.01,horizontal: size.width*0.01),
           child: Column(
@@ -62,7 +62,7 @@ class _RulesState extends State<Rules> {
                   RulesLanguage(rulesdata: widget.hindiRules,),
                 ],
               ),),
-              Text(AppLocalizations.of(context).translate('SwipeToChangeRulesLanguage'))
+              Text(AppLocalizations.of(context)!.translate('SwipeToChangeRulesLanguage')!)
             ],
           )
         ));

@@ -2,29 +2,29 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class  UserData{
-  String id;
-  String name;
-  int number;
-  int alterNativeNumber;
-  String image;
-  bool isActiveUser;
-  String password;
-  List<Map<String,dynamic>> clients;
-  List remainingEmi;
-  List<String> notificationKey;
-  String currentToken;
+  String? id;
+  String? name;
+  int? number;
+  int? alterNativeNumber;
+  String? image;
+  bool? isActiveUser;
+  String? password;
+  List<Map<String,dynamic>>? clients;
+  List? remainingEmi;
+  List<String>? notificationKey;
+ // String? currentToken;
   UserData({
-    this.id,
-     this.name,
-     this.number,
-     this.alterNativeNumber,
-      this.image,
-     this.password,
-      this.isActiveUser,
-     this.clients,
-     this.remainingEmi,
-     this.notificationKey,
-    this.currentToken
+   /*required*/ required this.id,
+    /*required*/ required   this.name,
+    /*required*/ required  this.number,
+    /*required*/ required  this.alterNativeNumber,
+    /*required*/ required    this.image,
+    /*required*/ required  this.password,
+    /*required*/ required   this.isActiveUser,
+    /*required*/ required  this.clients,
+    /*required*/ required  this.remainingEmi,
+    /*required*/ /*required*/ required  this.notificationKey,
+ //   /*required*/ required this.currentToken
   });
 
   factory UserData.of(DocumentSnapshot snapshot ){
@@ -38,7 +38,8 @@ class  UserData{
         password: snapshot['Password'],
         remainingEmi:  List.from(snapshot['RemainingEMI']),
         clients: List.from(snapshot['ClientsList']),
-        notificationKey: List.from(snapshot['NotificationKey'])
+        notificationKey: List.from(snapshot['NotificationKey']),
+
     );
   }
 }

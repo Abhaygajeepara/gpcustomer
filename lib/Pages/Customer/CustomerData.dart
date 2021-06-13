@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -38,11 +39,11 @@ class _LoanInfoState extends State<LoanInfo> {
   int paidEmi = 0;
   int remainingEmi = 0;
   int pageIndex =0;
-  int emiAmount =0;
+  int? emiAmount =0;
   List<SinglePropertiesLoanInfo> paidEmiData =[];
   List<SinglePropertiesLoanInfo> remainingEmiData =[];
   List<StatementModel> statementList=[];
-  String pdfPath ;
+   String? pdfPath ;
 bool loading = false;
   @override
   Widget build(BuildContext context) {
@@ -70,7 +71,7 @@ bool loading = false;
   int emiNumber =i+1;
 
      //   print(totalEmi);
-        if(loanData[i].emiPending){
+        if(loanData[i].emiPending!){
           remainingEmi = remainingEmi+1;
           remainingEmiData.add(loanData[i]);
 
@@ -81,8 +82,8 @@ bool loading = false;
           paidEmiData.add(loanData[i]);
 
         }
-        _paidAmount = emiNumber*emiAmount;
-        _remainingAmount = (emiAmount*totalEmi)-(emiAmount * emiNumber);
+        _paidAmount = emiNumber*emiAmount!;
+        _remainingAmount = (emiAmount!*totalEmi)-(emiAmount! * emiNumber);
 
      StatementModel data =   StatementModel.of(loanData[i], emiNumber, _paidAmount, _remainingAmount);
         statementList.add(data);
@@ -94,8 +95,8 @@ bool loading = false;
     return Scaffold(
 
       appBar: CommonappBar(
-          projectRetrieve.loadId,
-          Container(),context),
+          projectRetrieve.loadId!,
+          Container(),context) as PreferredSizeWidget?,
       body:SingleChildScrollView(
         child: StreamBuilder<BookingAndLoan>(
           stream: projectRetrieve.BOOKINGANDLOAN(),
@@ -103,8 +104,8 @@ bool loading = false;
             if(snapshot.hasData)
               {
                 //  projectRetrieve.setPartOfSociety(snapshot.data.bookingData.part,snapshot.data.bookingData.propertiesNumber);
-                calculation(snapshot.data.loanData,snapshot.data.bookingData);
-                   return !emiPage? propertiesInfo(snapshot.data):emiType(snapshot.data);
+                calculation(snapshot.data!.loanData,snapshot.data!.bookingData);
+                   return !emiPage? propertiesInfo(snapshot.data!):emiType(snapshot.data!);
 
               }
             else if(snapshot.hasError) {
@@ -139,8 +140,8 @@ bool loading = false;
             });
           },
           child: Text(!emiPage ?
-          AppLocalizations.of(context).translate('LoanInformation')
-              :AppLocalizations.of(context).translate('PropertyInformation'),
+          AppLocalizations.of(context)!.translate('LoanInformation')!
+              :AppLocalizations.of(context)!.translate('PropertyInformation')!,
             style: TextStyle(
                 color: CommonAssets.buttonTextColor
             ),
@@ -153,9 +154,9 @@ bool loading = false;
     final size = MediaQuery.of(context).size;
     final fontSize = size.height*0.017;
     List<String> titleList =[
-      AppLocalizations.of(context).translate('AllEMI')+"(${snapshot.loanData.length.toString()})",
-      AppLocalizations.of(context).translate('PaidEMI')+"(${paidEmi})",
-      AppLocalizations.of(context).translate('RemainingEMI')+"(${remainingEmi})"
+      AppLocalizations.of(context)!.translate('AllEMI')!+"(${snapshot.loanData.length.toString()})",
+      AppLocalizations.of(context)!.translate('PaidEMI')!+"(${paidEmi})",
+      AppLocalizations.of(context)!.translate('RemainingEMI')!+"(${remainingEmi})"
     ];
     return Padding(
       padding: EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.width *0.01),
@@ -242,7 +243,7 @@ bool loading = false;
          Row(
            mainAxisAlignment: MainAxisAlignment.spaceBetween,
            children: [
-             Text(AppLocalizations.of(context).translate('MonthlyEMI'),
+             Text(AppLocalizations.of(context)!.translate('MonthlyEMI')!,
              style: TextStyle(
                fontWeight: FontWeight.bold,
                fontSize: fontSize
@@ -262,14 +263,14 @@ bool loading = false;
          Row(
            mainAxisAlignment: MainAxisAlignment.spaceBetween,
            children: [
-             Text(AppLocalizations.of(context).translate('AllEMI')+' '+AppLocalizations.of(context).translate('Amount'),
+             Text(AppLocalizations.of(context)!.translate('AllEMI')!+' '+AppLocalizations.of(context)!.translate('Amount')!,
              style: TextStyle(
                fontWeight: FontWeight.bold,
                fontSize: fontSize
              ),
              ),
              Flexible(child: Text(
-                 (emiAmount*snapshot.loanData.length).toString(),
+                 (emiAmount!*snapshot.loanData.length).toString(),
                style: TextStyle(
                    fontSize: fontSize
                ),
@@ -281,13 +282,13 @@ bool loading = false;
          Row(
            mainAxisAlignment: MainAxisAlignment.spaceBetween,
            children: [
-             Text(AppLocalizations.of(context).translate('Paid')+' '+AppLocalizations.of(context).translate('Amount'),
+             Text(AppLocalizations.of(context)!.translate('Paid')!+' '+AppLocalizations.of(context)!.translate('Amount')!,
                style: TextStyle(
                    fontWeight: FontWeight.bold,
                    fontSize: fontSize
                ),
              ),
-             Flexible(child: Text((emiAmount*paidEmi).toString(),
+             Flexible(child: Text((emiAmount!*paidEmi).toString(),
                style: TextStyle(
                    fontSize: fontSize
                ),))
@@ -299,12 +300,12 @@ bool loading = false;
          Row(
            mainAxisAlignment: MainAxisAlignment.spaceBetween,
            children: [
-             Text(AppLocalizations.of(context).translate('Remaining')+' '+AppLocalizations.of(context).translate('Amount'),
+             Text(AppLocalizations.of(context)!.translate('Remaining')!+' '+AppLocalizations.of(context)!.translate('Amount')!,
                style: TextStyle(
                    fontWeight: FontWeight.bold,
                    fontSize: fontSize
                ),),
-             Flexible(child: Text((emiAmount*remainingEmi).toString(),
+             Flexible(child: Text((emiAmount!*remainingEmi).toString(),
                style: TextStyle(
                    fontSize: fontSize
                ),))
@@ -316,7 +317,7 @@ bool loading = false;
          Row(
            mainAxisAlignment: MainAxisAlignment.spaceBetween,
            children: [
-             Text(AppLocalizations.of(context).translate('Previous')+' '+AppLocalizations.of(context).translate('EMI'),
+             Text(AppLocalizations.of(context)!.translate('Previous')!+' '+AppLocalizations.of(context)!.translate('EMI')!,
                style: TextStyle(
                    fontWeight: FontWeight.bold,
                    fontSize: fontSize
@@ -335,7 +336,7 @@ bool loading = false;
          Row(
            mainAxisAlignment: MainAxisAlignment.spaceBetween,
            children: [
-             Text(AppLocalizations.of(context).translate('Next')+' '+AppLocalizations.of(context).translate('EMI'),
+             Text(AppLocalizations.of(context)!.translate('Next')!+' '+AppLocalizations.of(context)!.translate('EMI')!,
                style: TextStyle(
                    fontWeight: FontWeight.bold,
                    fontSize: fontSize
@@ -364,7 +365,8 @@ bool loading = false;
              fontSize: fontSize,
            ),),
            onPressed: ()async{
-             pdfPath =  await  GeneratePdf().createPdf(statementList,snapshot,projectRetrieve.projectName);
+             final pdfData = await GeneratePdf().createPdf(statementList,snapshot,projectRetrieve.projectName);
+             pdfPath =  pdfData;
              setState(() {
 
              });
@@ -391,7 +393,7 @@ bool loading = false;
              //     );
              // }
              // );
-             return   await Navigator.push(
+                await Navigator.push(
                context,
                PageRouteBuilder(
                  pageBuilder: (_, __, ___) => PdfPreviewScreen(path: pdfPath,),
@@ -454,17 +456,17 @@ bool loading = false;
           ],
           columns: [
             DataColumn(label: Text(
-                AppLocalizations.of(context).translate('EMINo'),
+                AppLocalizations.of(context)!.translate('EMINo')!,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
             ),),
             DataColumn(label: Column(
               children: [
                 Text(
-                    AppLocalizations.of(context).translate('EMI'),
+                    AppLocalizations.of(context)!.translate('EMI')!,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
                 ),
                 Text(
-                    AppLocalizations.of(context).translate('Date'),
+                    AppLocalizations.of(context)!.translate('Date')!,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
                 ),
               ],
@@ -472,27 +474,27 @@ bool loading = false;
             DataColumn(label: Column(
               children: [
                 Text(
-                    AppLocalizations.of(context).translate('Payment'),
+                    AppLocalizations.of(context)!.translate('Payment')!,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
                 ),
                 Text(
-                    AppLocalizations.of(context).translate('Date'),
+                    AppLocalizations.of(context)!.translate('Date')!,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
                 ),
               ],
             )),
             DataColumn(label: Text(
-                AppLocalizations.of(context).translate('MonthlyEMI'),
+                AppLocalizations.of(context)!.translate('MonthlyEMI')!,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
             ),),
             DataColumn(label: Column(
               children: [
                 Text(
-                    AppLocalizations.of(context).translate('Paid'),
+                    AppLocalizations.of(context)!.translate('Paid')!,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
                 ),
                 Text(
-                    AppLocalizations.of(context).translate('Amount'),
+                    AppLocalizations.of(context)!.translate('Amount')!,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
                 ),
               ],
@@ -500,17 +502,17 @@ bool loading = false;
             DataColumn(label: Column(
               children: [
                 Text(
-                    AppLocalizations.of(context).translate('Remaining'),
+                    AppLocalizations.of(context)!.translate('Remaining')!,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
                 ),
                 Text(
-                    AppLocalizations.of(context).translate('Amount'),
+                    AppLocalizations.of(context)!.translate('Amount')!,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
                 ),
               ],
             )),
             DataColumn(label: Text(
-                AppLocalizations.of(context).translate('Delay'),
+                AppLocalizations.of(context)!.translate('Delay')!,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
             ),),
 
@@ -537,18 +539,18 @@ Widget loanInfo(List<SinglePropertiesLoanInfo> snapshot){
             print('asd${lateEmiIndex}');
             // if lateEmiIndex is -1 then emi is late
 
-          Color borderColor =!snapshot[emiIndex].emiPending? CommonAssets.boxBorderColors:lateEmiIndex==1?CommonAssets.remainingEmiBoxBorderColors:CommonAssets.boxBorderColors;
+          Color borderColor =!snapshot[emiIndex].emiPending!? CommonAssets.boxBorderColors:lateEmiIndex==1?CommonAssets.remainingEmiBoxBorderColors:CommonAssets.boxBorderColors;
             return Card(
               shape: RoundedRectangleBorder(
                   side: BorderSide(
                       color: borderColor
                   )
               ),
-              color: snapshot[emiIndex].emiPending ? CommonAssets.paidEmiCardColor:Colors.white,
+              color: snapshot[emiIndex].emiPending! ? CommonAssets.paidEmiCardColor:Colors.white,
               child: ListTile(
                 onTap: (){
 
-                  return  snapshot[emiIndex].emiPending?toaster(AppLocalizations.of(context).translate('RemainingEMI')):
+                    snapshot[emiIndex].emiPending!?toaster(AppLocalizations.of(context)!.translate('RemainingEMI')!):
                   Navigator.push(context, PageRouteBuilder(
                     pageBuilder: (_, __, ___) =>PaidEmiDetails(singlePropertiesLoanInfo:  snapshot[emiIndex],),
                     transitionDuration: Duration(seconds: 0),
@@ -597,7 +599,7 @@ Widget loanInfo(List<SinglePropertiesLoanInfo> snapshot){
             ExpansionTile(
               childrenPadding: EdgeInsets.all(8),
               title: Text(
-                AppLocalizations.of(context).translate('BrokerInformation'),
+                AppLocalizations.of(context)!.translate('BrokerInformation')!,
                 style: TextStyle(
                     fontSize: titileSize,
                     fontWeight: fontWeight
@@ -608,7 +610,7 @@ Widget loanInfo(List<SinglePropertiesLoanInfo> snapshot){
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      AppLocalizations.of(context).translate('BrokerID'),
+                      AppLocalizations.of(context)!.translate('BrokerID')!,
                       style: TextStyle(
                           fontSize: titileSize,
                           fontWeight: fontWeight
@@ -620,7 +622,7 @@ Widget loanInfo(List<SinglePropertiesLoanInfo> snapshot){
                       child: new SingleChildScrollView(
                         scrollDirection: Axis.horizontal,//.horizontal
                         child: new Text(
-                          snapshot.bookingData.brokerReference,
+                          snapshot.bookingData.brokerReference!,
                           textAlign: TextAlign.center,
                           style: new TextStyle(
                             fontSize: titileSize,
@@ -636,7 +638,7 @@ Widget loanInfo(List<SinglePropertiesLoanInfo> snapshot){
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      AppLocalizations.of(context).translate('BrokerCommission'),
+                      AppLocalizations.of(context)!.translate('BrokerCommission')!,
                       style: TextStyle(
                           fontSize: titileSize,
                           fontWeight: fontWeight
@@ -657,7 +659,7 @@ Widget loanInfo(List<SinglePropertiesLoanInfo> snapshot){
             ExpansionTile(
               childrenPadding: EdgeInsets.all(8),
               title: Text(
-                AppLocalizations.of(context).translate('PropertyInformation'),
+                AppLocalizations.of(context)!.translate('PropertyInformation')!,
                 style: TextStyle(
                     fontSize: titileSize,
                     fontWeight: fontWeight
@@ -670,7 +672,7 @@ Widget loanInfo(List<SinglePropertiesLoanInfo> snapshot){
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      AppLocalizations.of(context).translate('SquareFeet'),
+                      AppLocalizations.of(context)!.translate('SquareFeet')!,
                       style: TextStyle(
                           fontSize: titileSize,
                           fontWeight: fontWeight
@@ -690,7 +692,7 @@ Widget loanInfo(List<SinglePropertiesLoanInfo> snapshot){
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      AppLocalizations.of(context).translate('PricePerSqFt'),
+                      AppLocalizations.of(context)!.translate('PricePerSqFt')!,
                       style: TextStyle(
                           fontSize: titileSize,
                           fontWeight: fontWeight
@@ -710,14 +712,14 @@ Widget loanInfo(List<SinglePropertiesLoanInfo> snapshot){
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      AppLocalizations.of(context).translate('BookingDate'),
+                      AppLocalizations.of(context)!.translate('BookingDate')!,
                       style: TextStyle(
                           fontSize: titileSize,
                           fontWeight: fontWeight
                       ),
                     ),
                     Text(
-                      snapshot.bookingData.cusBookingDate.toDate().toString().substring(0,19),
+                      snapshot.bookingData.cusBookingDate!.toDate().toString().substring(0,19),
                       style: TextStyle(
                         fontSize: normatTextSize,
 
@@ -731,7 +733,7 @@ Widget loanInfo(List<SinglePropertiesLoanInfo> snapshot){
             ExpansionTile(
               childrenPadding: EdgeInsets.all(8),
               title: Text(
-                AppLocalizations.of(context).translate('LoanInformation'),
+                AppLocalizations.of(context)!.translate('LoanInformation')!,
                 style: TextStyle(
                     fontSize: titileSize,
                     fontWeight: fontWeight
@@ -742,14 +744,14 @@ Widget loanInfo(List<SinglePropertiesLoanInfo> snapshot){
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      AppLocalizations.of(context).translate('LoanId'),
+                      AppLocalizations.of(context)!.translate('LoanId')!,
                       style: TextStyle(
                           fontSize: titileSize,
                           fontWeight: fontWeight
                       ),
                     ),
                     Text(
-                      snapshot.bookingData.loanReferenceCollectionName,
+                      snapshot.bookingData.loanReferenceCollectionName!,
                       style: TextStyle(
                         fontSize: normatTextSize,
 
@@ -762,7 +764,7 @@ Widget loanInfo(List<SinglePropertiesLoanInfo> snapshot){
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      AppLocalizations.of(context).translate('MonthlyEMI'),
+                      AppLocalizations.of(context)!.translate('MonthlyEMI')!,
                       style: TextStyle(
                           fontSize: titileSize,
                           fontWeight: fontWeight
@@ -782,7 +784,7 @@ Widget loanInfo(List<SinglePropertiesLoanInfo> snapshot){
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      AppLocalizations.of(context).translate('TotalEMI'),
+                      AppLocalizations.of(context)!.translate('TotalEMI')!,
                       style: TextStyle(
                           fontSize: titileSize,
                           fontWeight: fontWeight
@@ -802,14 +804,14 @@ Widget loanInfo(List<SinglePropertiesLoanInfo> snapshot){
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      AppLocalizations.of(context).translate('StartingDateOfLoan'),
+                      AppLocalizations.of(context)!.translate('StartingDateOfLoan')!,
                       style: TextStyle(
                           fontSize: titileSize,
                           fontWeight: fontWeight
                       ),
                     ),
                     Text(
-                      snapshot.bookingData.loanStartingDate.toDate().toString().substring(0,10),
+                      snapshot.bookingData.loanStartingDate!.toDate().toString().substring(0,10),
                       style: TextStyle(
                         fontSize: normatTextSize,
 
@@ -822,14 +824,14 @@ Widget loanInfo(List<SinglePropertiesLoanInfo> snapshot){
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      AppLocalizations.of(context).translate('EndingDateOfLoan'),
+                      AppLocalizations.of(context)!.translate('EndingDateOfLoan')!,
                       style: TextStyle(
                           fontSize: titileSize,
                           fontWeight: fontWeight
                       ),
                     ),
                     Text(
-                      snapshot.bookingData.loanStartingDate.toDate().toString().substring(0,10),
+                      snapshot.bookingData.loanStartingDate!.toDate().toString().substring(0,10),
                       style: TextStyle(
                         fontSize: normatTextSize,
 
