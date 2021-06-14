@@ -78,6 +78,7 @@ class _MyAppState extends State<MyApp> {
     send.send([id, status, progress]);
   }
   waitting()async{
+    await  ProjectRetrieve().storeFile();
     preferences = await SharedPreferences.getInstance();
     await preferences.setString('Version',currentAppVersion);
     !preferences.containsKey('Language')?await preferences.setString('Language', "en_US"): preferences.getString('Language');
@@ -294,14 +295,28 @@ class _MyAppState extends State<MyApp> {
     }
     else{
       return Scaffold(
-        body: Center(child: Text(
-          'Customer App Is Block For Some Time',
+        body: Center(child:
+        SingleChildScrollView(
+          child: Padding(
+              padding:  EdgeInsets.all(12.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset('assets/vrajraj.png'),
+                  SizedBox(height: 15,),
+                  Text(' Customer Service Is Currently Stop',style: TextStyle(
+                      fontSize: 18,
+                      color: CommonAssets.errorColor
+                  ),),
+                  SizedBox(height: 10,),
 
-          style: TextStyle(
-              color: CommonAssets.errorColor,
-              fontSize:25
+
+                ],
+              )
           ),
-        )),
+        )
+        ),
       );
     }
   }
